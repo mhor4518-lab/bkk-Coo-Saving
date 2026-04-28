@@ -68,7 +68,7 @@
   </div>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwNENvyhKyUebYrsogXqQKmDy4ZuG2CK-rFA8MvLfYWNMAqgPrrLEkb4M4avPTKTHjO/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw96Vkaq3-diRLgN-CRBUu4oQKZvrEHN_bbVOQsHg0fpFiypqLVCPFlN9LiE7eW9qBP/exec";
     const LIFF_ID = "2009900127-e74QaPVv";
 
     async function initLiff() {
@@ -83,28 +83,33 @@
       checkExistingUser(lineId);
     }
 
-    function checkExistingUser(lineId) {
-      // ใช้ fetch เพื่อดึงข้อมูลโปรไฟล์
-      fetch(SCRIPT_URL, {
-        method: "POST",
-        body: JSON.stringify({ action: "getProfile", lineId: lineId })
-      })
-      .then(res => res.json())
-      .then(res => {
-        if (res.found) {
-          // ✅ ถ้าเจอข้อมูล ให้โชว์ Profile Card
-          document.getElementById('mainTitle').innerText = "ข้อมูลสมาชิกพนักงาน";
-          document.getElementById('dispName').innerText = res.name;
-          document.getElementById('dispId').innerText = res.empId;
-          document.getElementById('dispDept').innerText = res.dept;
-          document.getElementById('dispDate').innerText = res.date;
-          document.getElementById('profileCard').style.display = "block";
-        } else {
-          // ❌ ถ้าไม่เจอ ให้โชว์ฟอร์มสมัคร
-          document.getElementById('regForm').style.display = "flex";
-        }
-      });
-    }
+function checkExistingUser(lineId) {
+  // เปลี่ยนมาใช้การส่งแบบ GET โดยต่อท้าย URL
+  const url = SCRIPT_URL + "?action=getProfile&lineId=" + lineId;
+  
+  fetch(url)
+    .then(res => res.json())
+    .then(res => {
+      if (res.found) {
+        // ✅ ถ้าเจอข้อมูล (พนักงานสมัครแล้ว)
+        document.getElementById('mainTitle').innerText = "ข้อมูลสมาชิกพนักงาน";
+        document.getElementById('dispName').innerText = res.name;
+        document.getElementById('dispId').innerText = res.empId;
+        document.getElementById('dispDept').innerText = res.dept;
+        document.getElementById('dispDate').innerText = res.date;
+        document.getElementById('profileCard').style.display = "block";
+        document.getElementById('regForm').style.display = "none";
+        document.getElementById('status').style.display = "none";
+      } else {
+        // ❌ ถ้าไม่เจอ (ยังไม่ได้สมัคร)
+        document.getElementById('regForm').style.display = "flex";
+      }
+    })
+    .catch(err => {
+      console.log("Check user error:", err);
+      document.getElementById('regForm').style.display = "flex";
+    });
+}
 
     initLiff();
 
