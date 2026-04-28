@@ -3,117 +3,239 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>ข้อมูลพนักงาน TTSBKK</title>
+  <title>BKK Smart Factory</title>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
-    /* CSS เดิมของคุณ + ตกแต่ง Profile Card */
     * { box-sizing: border-box; }
     body { font-family: 'Kanit', sans-serif; background-color: #f4f7f6; margin: 0; padding: 0; }
-    .card { padding: 25px; width: 100%; border-top: 12px solid #004a99; min-height: 100vh; background: white; }
-    h2 { color: #004a99; text-align: center; font-size: 26px; }
+    .card { padding: 25px; width: 100%; border-top: 12px solid #004a99; min-height: 100vh; background: white; display: flex; flex-direction: column; }
+    h2 { color: #004a99; text-align: center; font-size: 26px; margin-bottom: 20px; }
+    .status-line { text-align: center; font-size: 16px; padding: 12px; background: #eef6ff; border-radius: 10px; margin-bottom: 25px; color: #004a99; font-weight: bold; }
     
-    /* สไตล์สำหรับบัตรพนักงาน */
-    .profile-box { 
-      background: #f0f7ff; border-radius: 15px; padding: 20px; 
-      border: 1px solid #d0e3ff; margin-top: 20px; display: none; 
-    }
-    .info-group { margin-bottom: 15px; border-bottom: 1px dashed #ccc; padding-bottom: 5px; }
+    /* สไตล์ฟอร์มต่างๆ */
+    label { font-size: 18px; font-weight: 600; color: #333; margin-bottom: 8px; display: block; }
+    input, select, textarea { width: 100%; padding: 16px; margin-bottom: 20px; border: 2px solid #bbb; border-radius: 12px; font-size: 18px; font-family: 'Kanit'; -webkit-appearance: none; }
+    input:focus, select:focus, textarea:focus { border-color: #004a99; outline: none; background: #f0f7ff; }
+    button { background: #004a99; color: white; border: none; font-weight: 600; padding: 18px; border-radius: 15px; font-size: 22px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,74,153,0.2); width: 100%; margin-top: 10px; }
+    button:active { background: #003366; transform: scale(0.98); }
+    button:disabled { background: #ccc; }
+
+    /* สไตล์บัตรพนักงาน */
+    .profile-box { background: #f9fcff; border-radius: 15px; padding: 20px; border: 1px solid #d0e3ff; margin-bottom: 25px; }
+    .info-group { margin-bottom: 12px; border-bottom: 1px dashed #ccc; padding-bottom: 8px; }
     .info-label { font-size: 14px; color: #666; }
     .info-value { font-size: 20px; color: #004a99; font-weight: 600; }
+
+    /* สไตล์ประกาศข่าวสาร */
+    .news-section { margin-bottom: 30px; }
+    .news-title { font-size: 20px; font-weight: 600; color: #004a99; margin-bottom: 15px; border-left: 5px solid #004a99; padding-left: 10px; }
+    .news-item { background: #fff; border: 1px solid #ddd; padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; align-items: center; text-decoration: none; color: #333; }
+    .news-date { font-size: 12px; color: #fff; background: #004a99; padding: 4px 8px; border-radius: 5px; margin-right: 15px; white-space: nowrap; }
+    .news-text { font-size: 16px; font-weight: 400; flex-grow: 1; }
     
-    /* สไตล์ฟอร์มเดิม */
-    form { display: none; flex-direction: column; }
-    label { font-weight: 600; font-size: 18px; margin-bottom: 8px; }
-    input { width: 100%; padding: 15px; margin-bottom: 20px; border-radius: 12px; border: 2px solid #bbb; font-size: 18px; }
-    button { background: #004a99; color: white; border: none; padding: 20px; border-radius: 15px; font-size: 22px; cursor: pointer; }
+    /* สไตล์ส่วนข้อเสนอแนะ */
+    .feedback-section { background: #fff; border: 1px solid #ddd; padding: 20px; border-radius: 15px; }
+    
+    hr { border: 0; border-top: 2px solid #eee; margin: 25px 0; }
   </style>
 </head>
 <body>
   <div class="card">
-    <h2 id="mainTitle">ระบบพนักงาน</h2>
-    
-    <div id="profileCard" class="profile-box">
-      <div style="text-align:center; margin-bottom:15px;">
-         <div style="background:#004a99; color:white; display:inline-block; padding:5px 15px; border-radius:20px; font-size:14px;">สมาชิกพนักงานทั่วไป</div>
-      </div>
-      <div class="info-group">
-        <div class="info-label">ชื่อ-นามสกุล</div>
-        <div id="dispName" class="info-value">-</div>
-      </div>
-      <div class="info-group">
-        <div class="info-label">รหัสพนักงาน</div>
-        <div id="dispId" class="info-value">-</div>
-      </div>
-      <div class="info-group">
-        <div class="info-label">แผนก</div>
-        <div id="dispDept" class="info-value">-</div>
-      </div>
-      <div class="info-group">
-        <div class="info-label">วันที่ลงทะเบียน</div>
-        <div id="dispDate" class="info-value">-</div>
-      </div>
+    <h2 id="mainTitle">BKK Smart Factory</h2>
+    <div id="status" class="status-line">กำลังเชื่อมต่อระบบ...</div>
+
+    <input type="hidden" id="lineId">
+
+    <form id="regForm" style="display:none; flex-direction: column;">
+      <h3 style="text-align:center; color:#555; margin-top:0;">ลงทะเบียนพนักงาน</h3>
+      <label>รหัสพนักงาน</label>
+      <input type="text" id="employeeId" placeholder="กรอกรหัสพนักงาน" required>
+      <p style="color: #666; font-size: 14px; margin-top: -15px; margin-bottom: 15px;">* ดึงชื่อและแผนกอัตโนมัติจาก Master Data</p>
+      <label>เบอร์โทรศัพท์</label>
+      <input type="tel" id="phone" placeholder="08x-xxxxxxx" required>
+      <button type="submit" id="btnReg">ยืนยันลงทะเบียน</button>
+    </form>
+
+    <div id="pendingView" style="display:none; text-align:center; padding:30px 10px;">
+      <div style="font-size: 60px; margin-bottom: 20px;">⏳</div>
+      <h3 style="color:#004a99;">อยู่ระหว่างรออนุมัติ</h3>
+      <p style="color:#555; font-size: 18px;">ข้อมูลของคุณถูกส่งเข้าระบบแล้ว<br>กรุณารอ Admin ตรวจสอบสักครู่ครับ</p>
       <button onclick="liff.closeWindow()" style="background:#666; margin-top:20px;">ปิดหน้าต่าง</button>
     </div>
 
-    <form id="regForm">
-      <h2>สมัครสมาชิก</h2>
-      <input type="hidden" id="lineId">
-      <label>รหัสพนักงาน</label>
-      <input type="text" id="employeeId" required>
-      <label>เบอร์โทรศัพท์</label>
-      <input type="tel" id="phone" required>
-      <button type="submit" id="btn">ยืนยันลงทะเบียน</button>
-    </form>
+    <div id="approvedView" style="display:none; flex-direction: column;">
+      
+      <div class="profile-box">
+        <div style="text-align:center; margin-bottom:15px;">
+           <span style="background:#28a745; color:white; padding:5px 15px; border-radius:20px; font-size:14px;">✅ พนักงานยืนยันตัวตนแล้ว</span>
+        </div>
+        <div class="info-group">
+          <div class="info-label">ชื่อ-นามสกุล</div>
+          <div id="dispName" class="info-value">-</div>
+        </div>
+        <div class="info-group" style="display:flex; justify-content:space-between;">
+          <div style="width:48%;">
+            <div class="info-label">รหัสพนักงาน</div>
+            <div id="dispId" class="info-value">-</div>
+          </div>
+          <div style="width:48%;">
+            <div class="info-label">แผนก</div>
+            <div id="dispDept" class="info-value">-</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="news-section">
+        <div class="news-title">ประกาศ / Work Instruction</div>
+        <div id="newsList">
+           </div>
+      </div>
+
+      <div class="feedback-section">
+        <div class="news-title">กล่องข้อเสนอแนะ / ร้องเรียน</div>
+        <form id="feedbackForm">
+          <label>หัวข้อ</label>
+          <select id="fbTopic" required>
+            <option value="" disabled selected>-- เลือกหัวข้อ --</option>
+            <option value="บริการ">บริการของเจ้าหน้าที่</option>
+            <option value="สวัสดิการ">สวัสดิการและการกู้ยืม</option>
+            <option value="ระบบ">ระบบออนไลน์/แอปพลิเคชัน</option>
+            <option value="อื่นๆ">อื่นๆ</option>
+          </select>
+          <label>รายละเอียด</label>
+          <textarea id="fbDetails" rows="4" placeholder="ระบุรายละเอียด..." required></textarea>
+          <button type="submit" id="btnFb">ส่งข้อเสนอแนะ</button>
+        </form>
+      </div>
+
+      <button onclick="liff.closeWindow()" style="background:#666; margin-top:30px;">ปิดหน้าต่างแอป</button>
+    </div>
+
   </div>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw96Vkaq3-diRLgN-CRBUu4oQKZvrEHN_bbVOQsHg0fpFiypqLVCPFlN9LiE7eW9qBP/exec";
+    // 🚨 1. วาง URL จาก Google Apps Script (ต้องตรงกับ Code.gs ล่าสุด)
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwRGNYOVTS4A6fXAZLMK8edQzkJWUO1y3WLHjXTvP_Xpl4lmYwC5e0-b79WXCRUgywz/exec"; 
+    
+    // 🚨 2. วาง LIFF ID ของคุณ
     const LIFF_ID = "2009900127-e74QaPVv";
 
+    // --- ระบบตรวจสอบและดึงข้อมูลโปรไฟล์ ---
     async function initLiff() {
-      await liff.init({ liffId: LIFF_ID });
-      if (!liff.isLoggedIn()) { liff.login(); return; }
-      
-      const profile = await liff.getProfile();
-      const lineId = profile.userId;
-      document.getElementById('lineId').value = lineId;
-
-      // 🔍 เช็คข้อมูลก่อนว่าเคยสมัครหรือยัง
-      checkExistingUser(lineId);
+      try {
+        await liff.init({ liffId: LIFF_ID });
+        if (liff.isLoggedIn()) {
+          const profile = await liff.getProfile();
+          document.getElementById('lineId').value = profile.userId;
+          document.getElementById('status').innerText = "กำลังดึงข้อมูลพนักงาน...";
+          
+          checkUserData(profile.userId);
+        } else {
+          liff.login();
+        }
+      } catch (err) {
+        document.getElementById('status').innerText = "เชื่อมต่อ LINE ผิดพลาด";
+        document.getElementById('status').style.color = "red";
+      }
     }
 
-function checkExistingUser(lineId) {
-  // เปลี่ยนมาใช้การส่งแบบ GET โดยต่อท้าย URL
-  const url = SCRIPT_URL + "?action=getProfile&lineId=" + lineId;
-  
-  fetch(url)
-    .then(res => res.json())
-    .then(res => {
-      if (res.found) {
-        // ✅ ถ้าเจอข้อมูล (พนักงานสมัครแล้ว)
-        document.getElementById('mainTitle').innerText = "ข้อมูลสมาชิกพนักงาน";
-        document.getElementById('dispName').innerText = res.name;
-        document.getElementById('dispId').innerText = res.empId;
-        document.getElementById('dispDept').innerText = res.dept;
-        document.getElementById('dispDate').innerText = res.date;
-        document.getElementById('profileCard').style.display = "block";
-        document.getElementById('regForm').style.display = "none";
-        document.getElementById('status').style.display = "none";
-      } else {
-        // ❌ ถ้าไม่เจอ (ยังไม่ได้สมัคร)
-        document.getElementById('regForm').style.display = "flex";
-      }
-    })
-    .catch(err => {
-      console.log("Check user error:", err);
-      document.getElementById('regForm').style.display = "flex";
-    });
-}
+    function checkUserData(lineId) {
+      // เรียกใช้ GET Method ไปที่ Google Script
+      const url = SCRIPT_URL + "?action=getProfile&lineId=" + lineId;
+      
+      fetch(url)
+      .then(res => res.json())
+      .then(res => {
+        document.getElementById('status').style.display = "none"; // ซ่อน Status Line
+        
+        if (res.found) {
+          if (res.status === "Pending") {
+            // สถานะ: รออนุมัติ
+            document.getElementById('mainTitle').innerText = "ระบบสมาชิก";
+            document.getElementById('pendingView').style.display = "block";
+          } else {
+            // สถานะ: อนุมัติแล้ว (Approved)
+            document.getElementById('mainTitle').innerText = "My Profile";
+            document.getElementById('dispName').innerText = res.name;
+            document.getElementById('dispId').innerText = res.empId;
+            document.getElementById('dispDept').innerText = res.dept;
+            
+            // สร้างรายการประกาศข่าวสาร
+            let newsHTML = "";
+            if (res.news && res.news.length > 0) {
+              res.news.forEach(item => {
+                newsHTML += `
+                  <a href="${item.link}" target="_blank" class="news-item">
+                    <span class="news-date">${item.date}</span>
+                    <span class="news-text">${item.title}</span>
+                    <span style="color:#aaa;">❯</span>
+                  </a>`;
+              });
+            } else {
+              newsHTML = "<p style='text-align:center; color:#999;'>ยังไม่มีประกาศใหม่ในขณะนี้</p>";
+            }
+            document.getElementById('newsList').innerHTML = newsHTML;
+            
+            document.getElementById('approvedView').style.display = "flex";
+          }
+        } else {
+          // สถานะ: ยังไม่เคยสมัคร
+          document.getElementById('mainTitle').innerText = "ลงทะเบียนเข้าใช้งาน";
+          document.getElementById('regForm').style.display = "flex";
+        }
+      })
+      .catch(err => {
+        alert("การดึงข้อมูลผิดพลาด กรุณาลองใหม่");
+      });
+    }
 
-    initLiff();
+    // --- ระบบส่งข้อมูลลงทะเบียน ---
+    document.getElementById('regForm').onsubmit = function(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btnReg');
+      btn.disabled = true;
+      btn.innerText = "กำลังตรวจสอบ...";
+      
+      const data = {
+        action: "register",
+        lineId: document.getElementById('lineId').value,
+        employeeId: document.getElementById('employeeId').value,
+        phone: document.getElementById('phone').value
+      };
 
-    // ส่วนของ onSubmit เดิมของคุณ...
-  </script>
-</body>
-</html>
+      fetch(SCRIPT_URL, {
+        method: "POST", mode: "no-cors", body: JSON.stringify(data)
+      }).then(() => {
+        alert("ส่งคำขอลงทะเบียนสำเร็จ!\nกรุณารอ Admin อนุมัติข้อมูลสักครู่ครับ");
+        liff.closeWindow();
+      }).catch(err => {
+        alert("เกิดข้อผิดพลาด: " + err);
+        btn.disabled = false;
+        btn.innerText = "ยืนยันลงทะเบียน";
+      });
+    };
+
+    // --- ระบบส่งข้อมูลข้อเสนอแนะ ---
+    document.getElementById('feedbackForm').onsubmit = function(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btnFb');
+      btn.disabled = true;
+      btn.innerText = "กำลังส่งข้อความ...";
+      
+      const data = {
+        action: "feedback",
+        lineId: document.getElementById('lineId').value,
+        topic: document.getElementById('fbTopic').value,
+        details: document.getElementById('fbDetails').value
+      };
+
+      fetch(SCRIPT_URL, {
+        method: "POST", mode: "no-cors", body: JSON.stringify(data)
+      }).then(() => {
+        alert("ส่งข้อเสนอแนะเรียบร้อย ขอบคุณสำหรับข้อมูลครับ!");
+        document.getElementById('feedbackForm').reset();
+        btn.disabled = false;
+        btn.innerText = "ส่งข้อเสนอแนะ";
+      }).catch(err => {
+        alert
