@@ -3,19 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>ลงทะเบียนพนักงาน TTSBKK</title>
+  <title>ลงทะเบียน TTSBKK</title>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
-    /* ใช้ CSS เดิมของคุณที่ตัวใหญ่และเต็มจอ */
     * { box-sizing: border-box; }
-    body { font-family: 'Kanit', sans-serif; margin: 0; padding: 0; }
-    .card { padding: 25px; width: 100%; border-top: 12px solid #004a99; min-height: 100vh; display: flex; flex-direction: column; }
-    h2 { color: #004a99; text-align: center; font-size: 28px; margin-bottom: 20px; }
-    .status-line { text-align: center; font-size: 14px; color: #666; margin-bottom: 20px; padding: 10px; background: #f0f7ff; border-radius: 8px; }
-    label { display: block; margin-bottom: 8px; font-size: 18px; font-weight: 600; }
-    input, select, button { width: 100%; padding: 16px; margin-bottom: 20px; border-radius: 12px; border: 2px solid #bbb; font-size: 18px; font-family: 'Kanit'; }
-    button { background: #004a99; color: white; border: none; font-weight: 600; padding: 20px; font-size: 22px; margin-top: auto; cursor: pointer; }
+    body { font-family: 'Kanit', sans-serif; background-color: #ffffff; margin: 0; padding: 0; min-height: 100vh; }
+    .card { padding: 20px; width: 100%; border-top: 12px solid #004a99; display: flex; flex-direction: column; min-height: 100vh; }
+    h2 { color: #004a99; text-align: center; font-size: 26px; margin: 10px 0 20px 0; }
+    .status-line { text-align: center; font-size: 16px; font-weight: bold; padding: 12px; background: #eef6ff; border-radius: 10px; margin-bottom: 20px; }
+    
+    /* แก้ไขให้ Input เรียงตัวสวยงามไม่ซ้อนกัน */
+    form { display: flex; flex-direction: column; flex-grow: 1; }
+    label { display: block; margin-bottom: 8px; font-weight: 600; color: #333; font-size: 18px; }
+    input, select { 
+      width: 100%; padding: 15px; margin-bottom: 20px; 
+      border: 2px solid #bbb; border-radius: 12px; font-size: 18px; 
+      font-family: 'Kanit'; -webkit-appearance: none;
+    }
+    input:focus { border-color: #004a99; outline: none; background: #f9fcff; }
+    
+    button { 
+      background: #004a99; color: white; border: none; font-weight: 600; 
+      padding: 18px; border-radius: 15px; font-size: 22px; cursor: pointer;
+      margin-top: auto; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
     button:disabled { background: #ccc; }
   </style>
 </head>
@@ -26,65 +38,51 @@
     
     <form id="regForm" style="display:none;">
       <input type="hidden" id="lineId">
-
+      
       <label>รหัสพนักงาน</label>
-      <input type="text" id="employeeId" required>
+      <input type="text" id="employeeId" placeholder="กรอกรหัสพนักงาน 5 หลัก" required>
       
-      <label>ชื่อ-นามสกุล</label>
-      <input type="text" id="fullName" required>
-      
-      <label>แผนก</label>
-      <select id="dept" required>
-        <option value="" disabled selected>-- เลือกแผนก --</option>
-        <option value="E&I">E&I</option>
-        <option value="M&U">M&U</option>
-        <option value="Production">Production</option>
-      </select>
+      <p style="font-size: 14px; color: #666; margin-top: -15px; margin-bottom: 15px;">* ระบบจะดึงชื่อ-แผนกอัตโนมัติจากฐานข้อมูลบริษัท</p>
       
       <label>เบอร์โทรศัพท์</label>
-      <input type="tel" id="phone" required>
+      <input type="tel" id="phone" placeholder="08x-xxxxxxx" required>
       
       <button type="submit" id="btn">ยืนยันลงทะเบียน</button>
     </form>
   </div>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxP2vxA2u4yJe8lwr--4oszIr0d0qznyl4ZH0HuOSTgfYGZNzE26it5vt4zKAmdr2ea/exec";
-    const LIFF_ID = "2009900127-e74QaPVv"; // นำมาจาก LINE Developers
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxOWXX5ObW8kjI-iM5mbyF3Aj2An_igJxLnWnxAR5gUVwGHi-BdUcW89EFHLv42ajaY/exec";
+    const LIFF_ID = "2009900127-e74QaPVv";
 
-    // 1. เริ่มทำงาน LIFF เพื่อดึง LINE ID
     async function initLiff() {
       try {
         await liff.init({ liffId: LIFF_ID });
         if (liff.isLoggedIn()) {
           const profile = await liff.getProfile();
-          document.getElementById('lineId').value = profile.userId; // เก็บ User ID
-          document.getElementById('status').innerText = "เชื่อมต่อ LINE สำเร็จ";
-          document.getElementById('status').style.color = "green";
+          document.getElementById('lineId').value = profile.userId;
+          document.getElementById('status').innerText = "เชื่อมต่อ LINE สำเร็จ ✅";
+          document.getElementById('status').style.color = "#28a745";
           document.getElementById('regForm').style.display = "flex";
-          document.getElementById('regForm').style.direction = "column";
         } else {
           liff.login();
         }
       } catch (err) {
-        document.getElementById('status').innerText = "ข้อผิดพลาด: " + err;
+        document.getElementById('status').innerText = "เชื่อมต่อผิดพลาด: " + err;
       }
     }
     initLiff();
 
-    // 2. ส่งข้อมูลไปยัง Google Sheets
     document.getElementById('regForm').onsubmit = function(e) {
       e.preventDefault();
       const btn = document.getElementById('btn');
       btn.disabled = true;
-      btn.innerText = "กำลังบันทึก...";
+      btn.innerText = "กำลังตรวจสอบฐานข้อมูล...";
       
       const data = {
         action: "register",
         lineId: document.getElementById('lineId').value,
         employeeId: document.getElementById('employeeId').value,
-        fullName: document.getElementById('fullName').value,
-        dept: document.getElementById('dept').value,
         phone: document.getElementById('phone').value
       };
 
@@ -94,13 +92,13 @@
         body: JSON.stringify(data)
       })
       .then(() => {
-        // เมื่อใช้ no-cors เราจะไม่ได้รับข้อความ Text กลับมาตรงๆ 
-        // วิธีที่ดีที่สุดคือแจ้งว่า "ส่งคำขอตรวจสอบแล้ว" 
-        // หรือถ้าอยากเป๊ะ ต้องเปลี่ยนโหมดการส่งเป็น CORS (ซึ่งยุ่งยากกว่า)
-        alert("ส่งข้อมูลตรวจสอบตัวตนพนักงานแล้ว กรุณารอสักครู่และตรวจสอบที่หน้าแชท LINE");
-        liff.closeWindow(); 
+        alert("ส่งข้อมูลลงทะเบียนแล้ว! \nระบบกำลังตรวจสอบรหัสพนักงานใน Master Data \nหากถูกต้องชื่อของคุณจะปรากฏในระบบทันที");
+        liff.closeWindow();
       })
-      .catch(err => alert("ผิดพลาด: " + err));
+      .catch(err => {
+        alert("Error: " + err);
+        btn.disabled = false;
+      });
     };
   </script>
 </body>
