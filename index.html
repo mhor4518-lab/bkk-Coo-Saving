@@ -1,0 +1,33 @@
+// วาง URL ที่ก๊อปมาลงในเครื่องหมายคำพูดด้านล่าง
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyyS3sUXig2pFCJdcEfMaB_M-7nUhR8WEHyxiYmTeFhn1cZZd0iHIDWKhxx7zmYsSqo/exec"; 
+
+document.getElementById('feedForm').onsubmit = function(e) {
+  e.preventDefault();
+  const btn = document.getElementById('btn');
+  btn.disabled = true;
+  btn.innerText = "กำลังส่งข้อมูล...";
+  
+  const data = {
+    topic: document.getElementById('topic').value,
+    details: document.getElementById('details').value,
+    senderName: document.getElementById('senderName').value || "ไม่ประสงค์ออกนาม"
+  };
+
+  // ส่งข้อมูลไปยัง Google Sheets
+  fetch(SCRIPT_URL, {
+    method: "POST",
+    body: JSON.stringify(data)
+  })
+  .then(res => res.text())
+  .then(res => {
+    alert(res);
+    document.getElementById('feedForm').reset();
+    btn.disabled = false;
+    btn.innerText = "ส่งข้อมูล";
+  })
+  .catch(err => {
+    alert("เกิดข้อผิดพลาด: " + err);
+    btn.disabled = false;
+    btn.innerText = "ส่งข้อมูล";
+  });
+};
