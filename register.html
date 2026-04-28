@@ -9,42 +9,39 @@
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; }
-    body { font-family: 'Kanit', sans-serif; background-color: #f4f7f6; margin: 0; padding: 0; }
-    .card { padding: 25px; width: 100%; border-top: 12px solid #004a99; min-height: 100vh; background: white; display: flex; flex-direction: column; }
+    body { font-family: 'Kanit', sans-serif; background-color: #f0f4f8; margin: 0; padding: 0; }
+    .card { padding: 25px; width: 100%; border-top: 10px solid #004a99; min-height: 100vh; background: white; display: flex; flex-direction: column; }
     h2 { color: #004a99; text-align: center; font-size: 28px; margin-bottom: 20px; }
-    .status-line { text-align: center; font-size: 16px; padding: 12px; background: #eef6ff; border-radius: 10px; margin-bottom: 25px; color: #004a99; font-weight: bold; }
     
-    label { font-size: 18px; font-weight: 600; color: #333; margin-bottom: 8px; display: block; }
-    input, select, textarea { width: 100%; padding: 16px; margin-bottom: 20px; border: 2px solid #bbb; border-radius: 12px; font-size: 18px; font-family: 'Kanit'; -webkit-appearance: none; }
-    input:focus, select:focus, textarea:focus { border-color: #004a99; outline: none; background: #f0f7ff; }
+    /* Input & Select Styles */
+    label { font-size: 17px; font-weight: 600; color: #444; margin-bottom: 8px; display: block; }
+    input, select, textarea { width: 100%; padding: 15px; margin-bottom: 20px; border: 2px solid #cbd5e0; border-radius: 12px; font-size: 18px; font-family: 'Kanit'; -webkit-appearance: none; }
+    input:focus, select:focus { border-color: #004a99; outline: none; background: #f7fafc; }
     
-    button { background: #004a99; color: white; border: none; font-weight: 600; padding: 18px; border-radius: 15px; font-size: 22px; cursor: pointer; width: 100%; margin-top: 10px; }
-    button:active { background: #003366; transform: scale(0.98); }
-    button:disabled { background: #ccc; }
+    button { background: #004a99; color: white; border: none; font-weight: 600; padding: 18px; border-radius: 15px; font-size: 22px; cursor: pointer; width: 100%; }
+    button:disabled { background: #a0aec0; }
 
-    .profile-box { background: #f9fcff; border-radius: 15px; padding: 20px; border: 1px solid #d0e3ff; margin-bottom: 25px; }
-    .info-group { margin-bottom: 12px; border-bottom: 1px dashed #ccc; padding-bottom: 8px; }
-    .info-label { font-size: 14px; color: #666; }
-    .info-value { font-size: 20px; color: #004a99; font-weight: 600; }
+    /* Profile Card */
+    .profile-box { background: linear-gradient(135deg, #f0f7ff 0%, #ffffff 100%); border-radius: 20px; padding: 20px; border: 1px solid #bee3f8; margin-bottom: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+    .info-group { margin-bottom: 12px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 8px; }
+    .info-label { font-size: 13px; color: #718096; text-transform: uppercase; }
+    .info-value { font-size: 19px; color: #2c5282; font-weight: 600; }
 
-    .news-section { margin-bottom: 30px; }
-    .news-title { font-size: 20px; font-weight: 600; color: #004a99; margin-bottom: 15px; border-left: 5px solid #004a99; padding-left: 10px; }
-    .news-item { background: #fff; border: 1px solid #ddd; padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; align-items: center; text-decoration: none; color: #333; }
-    .news-date { font-size: 12px; color: #fff; background: #004a99; padding: 4px 8px; border-radius: 5px; margin-right: 15px; }
-    .news-text { font-size: 16px; flex-grow: 1; }
+    /* News Items */
+    .news-title { font-size: 20px; font-weight: 600; color: #004a99; margin-bottom: 15px; padding-left: 10px; border-left: 5px solid #004a99; }
+    .news-item { background: white; border: 1px solid #edf2f7; padding: 15px; border-radius: 15px; margin-bottom: 10px; display: flex; align-items: center; text-decoration: none; color: #2d3748; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+    .news-date { font-size: 11px; color: white; background: #004a99; padding: 3px 8px; border-radius: 6px; margin-right: 12px; }
   </style>
 </head>
 <body>
   <div class="card">
-    <h2 id="mainTitle">BKK Smart Factory</h2>
-    <div id="status" class="status-line">กำลังโหลดข้อมูล...</div>
-
+    <h2 id="mainTitle">Loading...</h2>
+    <div id="status" style="text-align:center; color:#666;">กำลังเชื่อมต่อฐานข้อมูล...</div>
     <input type="hidden" id="lineId">
 
     <form id="regForm" style="display:none; flex-direction: column;">
       <label>รหัสพนักงาน</label>
-      <input type="text" id="employeeId" placeholder="กรอกรหัสพนักงาน" required>
-      
+      <input type="text" id="employeeId" placeholder="กรอกรหัส 5 หลัก" required>
       <label>หน่วยงาน</label>
       <select id="dept" required>
         <option value="" disabled selected>-- เลือกหน่วยงาน --</option>
@@ -53,48 +50,45 @@
         <option value="TPPT">TPPT</option>
         <option value="HO">HO</option>
       </select>
-
       <label>เบอร์โทรศัพท์</label>
       <input type="tel" id="phone" placeholder="08x-xxxxxxx" required>
       <button type="submit" id="btnReg">ยืนยันลงทะเบียน</button>
     </form>
 
-    <div id="pendingView" style="display:none; text-align:center;">
-      <div style="font-size: 60px; margin: 20px 0;">⏳</div>
-      <h3 style="color:#004a99;">รอการอนุมัติจาก Admin</h3>
-      <p>ระบบได้รับข้อมูลของคุณแล้ว<br>กรุณารอการตรวจสอบสักครู่ครับ</p>
-      <button onclick="liff.closeWindow()" style="background:#666;">ปิดหน้าต่าง</button>
+    <div id="pendingView" style="display:none; text-align:center; padding:40px 10px;">
+      <div style="font-size: 70px; margin-bottom: 20px;">⏳</div>
+      <h3>รอการตรวจสอบ</h3>
+      <p style="color:#4a5568;">Admin กำลังตรวจสอบข้อมูลของคุณ<br>กรุณากลับมาเช็คอีกครั้งในภายหลังครับ</p>
+      <button onclick="liff.closeWindow()" style="background:#718096; margin-top:20px;">ปิดหน้าต่าง</button>
     </div>
 
     <div id="approvedView" style="display:none; flex-direction: column;">
       <div class="profile-box">
-        <div style="text-align:center; margin-bottom:10px;"><span style="background:#28a745; color:white; padding:4px 12px; border-radius:20px; font-size:12px;">พนักงาน TTSBKK</span></div>
+        <div style="text-align:center; margin-bottom:12px;"><span style="background:#38a169; color:white; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:600;">ACTIVE MEMBER</span></div>
         <div class="info-group"><div class="info-label">ชื่อ-นามสกุล</div><div id="dispName" class="info-value">-</div></div>
-        <div class="info-group" style="display:flex; justify-content:space-between;">
-          <div style="width:48%;"><div class="info-label">รหัส</div><div id="dispId" class="info-value">-</div></div>
-          <div style="width:48%;"><div class="info-label">หน่วยงาน</div><div id="dispDept" class="info-value">-</div></div>
+        <div style="display:flex; justify-content:space-between;">
+          <div style="width:48%;" class="info-group"><div class="info-label">รหัสพนักงาน</div><div id="dispId" class="info-value">-</div></div>
+          <div style="width:48%;" class="info-group"><div class="info-label">หน่วยงาน</div><div id="dispDept" class="info-value">-</div></div>
         </div>
       </div>
 
-      <div class="news-section">
-        <div class="news-title">ประกาศล่าสุด</div>
-        <div id="newsList"></div>
-      </div>
+      <div class="news-title">ประกาศล่าสุด</div>
+      <div id="newsList" style="margin-bottom:30px;"></div>
 
-      <div class="feedback-section" style="background:#f9f9f9; padding:15px; border-radius:15px; border:1px solid #eee;">
-        <div class="news-title" style="font-size:18px;">ส่งข้อเสนอแนะ</div>
+      <div style="background:#f7fafc; padding:20px; border-radius:20px; border:1px solid #e2e8f0;">
+        <div class="news-title" style="font-size:18px;">ข้อเสนอแนะ / แจ้งปัญหา</div>
         <form id="feedbackForm">
-          <select id="fbTopic" required><option value="" disabled selected>เลือกหัวข้อ</option><option value="บริการ">บริการ</option><option value="สวัสดิการ">สวัสดิการ</option><option value="ระบบ">ระบบออนไลน์</option></select>
-          <textarea id="fbDetails" rows="3" placeholder="รายละเอียด..." required></textarea>
+          <select id="fbTopic" required><option value="" disabled selected>เลือกหัวข้อ</option><option value="บริการ">บริการ</option><option value="สวัสดิการ">สวัสดิการ</option><option value="ระบบงาน">ระบบงาน/IT</option></select>
+          <textarea id="fbDetails" rows="3" placeholder="พิมพ์รายละเอียด..." required></textarea>
           <button type="submit" id="btnFb" style="font-size:18px; padding:12px;">ส่งข้อมูล</button>
         </form>
       </div>
-      <button onclick="liff.closeWindow()" style="background:#666; margin-top:30px;">ปิดหน้าต่าง</button>
+      <button onclick="liff.closeWindow()" style="background:#718096; margin-top:30px;">ปิดแอป</button>
     </div>
   </div>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby_FKIFpC-njsghrHkX8h1OHCmAq-eFCI5f16w4XVqWv8GS0PUs64m9QT8wcr-d8ARG/exec"; 
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzlwjzOZhsVTSwBdt8e_K5pWw3eMHLMOElBnJT07911ajxu81w4WC1CTDr5wlljhhmV/exec"; 
     const LIFF_ID = "2009900127-e74QaPVv";
 
     function hideAll() {
@@ -105,45 +99,50 @@
     }
 
     async function initLiff() {
-      await liff.init({ liffId: LIFF_ID });
-      if (!liff.isLoggedIn()) { liff.login(); return; }
-      const lineId = liff.getDecodedIDToken().sub;
-      document.getElementById('lineId').value = lineId;
-      
-      fetch(SCRIPT_URL + "?action=getProfile&lineId=" + lineId + "&t=" + new Date().getTime())
-      .then(res => res.json())
-      .then(res => {
-        hideAll();
-        if (res.found) {
-          if (res.status === "Pending") {
-            document.getElementById('pendingView').style.display = 'block';
+      try {
+        await liff.init({ liffId: LIFF_ID });
+        if (!liff.isLoggedIn()) { liff.login(); return; }
+        const lineId = liff.getDecodedIDToken().sub;
+        document.getElementById('lineId').value = lineId;
+        
+        fetch(SCRIPT_URL + "?action=getProfile&lineId=" + lineId + "&t=" + new Date().getTime())
+        .then(res => res.json())
+        .then(res => {
+          hideAll();
+          if (res.found) {
+            if (res.status === "Pending") {
+              document.getElementById('mainTitle').innerText = "Status";
+              document.getElementById('pendingView').style.display = 'block';
+            } else {
+              document.getElementById('mainTitle').innerText = "My Profile";
+              document.getElementById('dispName').innerText = res.name;
+              document.getElementById('dispId').innerText = res.empId;
+              document.getElementById('dispDept').innerText = res.dept;
+              let nHTML = "";
+              res.news.forEach(n => { nHTML += `<a href="${n.link}" target="_blank" class="news-item"><span class="news-date">${n.date}</span><span class="news-text">${n.title}</span></a>`; });
+              document.getElementById('newsList').innerHTML = nHTML || "<p style='text-align:center; color:#a0aec0;'>ไม่มีประกาศ</p>";
+              document.getElementById('approvedView').style.display = 'flex';
+            }
           } else {
-            document.getElementById('dispName').innerText = res.name;
-            document.getElementById('dispId').innerText = res.empId;
-            document.getElementById('dispDept').innerText = res.dept;
-            let newsHTML = "";
-            res.news.forEach(n => { newsHTML += `<a href="${n.link}" target="_blank" class="news-item"><span class="news-date">${n.date}</span><span class="news-text">${n.title}</span></a>`; });
-            document.getElementById('newsList').innerHTML = newsHTML || "ไม่มีประกาศ";
-            document.getElementById('approvedView').style.display = 'flex';
+            document.getElementById('mainTitle').innerText = "Register";
+            document.getElementById('regForm').style.display = 'flex';
           }
-        } else {
-          document.getElementById('regForm').style.display = 'flex';
-        }
-      });
+        });
+      } catch (e) { alert("LIFF Error"); }
     }
 
     document.getElementById('regForm').onsubmit = function(e) {
       e.preventDefault();
       document.getElementById('btnReg').disabled = true;
       const data = { action: "register", lineId: document.getElementById('lineId').value, employeeId: document.getElementById('employeeId').value, dept: document.getElementById('dept').value, phone: document.getElementById('phone').value };
-      fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(data) }).then(() => { alert("ลงทะเบียนแล้ว รอการอนุมัติครับ"); liff.closeWindow(); });
+      fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(data) }).then(() => { alert("ลงทะเบียนสำเร็จ! กรุณารอ Admin อนุมัติ"); liff.closeWindow(); });
     };
 
     document.getElementById('feedbackForm').onsubmit = function(e) {
       e.preventDefault();
       document.getElementById('btnFb').disabled = true;
       const data = { action: "feedback", lineId: document.getElementById('lineId').value, topic: document.getElementById('fbTopic').value, details: document.getElementById('fbDetails').value };
-      fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(data) }).then(() => { alert("ส่งสำเร็จ"); document.getElementById('feedbackForm').reset(); document.getElementById('btnFb').disabled = false; });
+      fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(data) }).then(() => { alert("ขอบคุณสำหรับข้อเสนอแนะ!"); document.getElementById('feedbackForm').reset(); document.getElementById('btnFb').disabled = false; });
     };
 
     initLiff();
