@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <title>BKK Smart Factory</title>
+  <title>สหกรณ์ TTSBKK</title>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
@@ -13,34 +13,31 @@
     .card { padding: 25px; width: 100%; border-top: 10px solid #004a99; min-height: 100vh; background: white; display: flex; flex-direction: column; }
     h2 { color: #004a99; text-align: center; font-size: 28px; margin-bottom: 20px; }
     
-    /* Input & Select Styles */
     label { font-size: 17px; font-weight: 600; color: #444; margin-bottom: 8px; display: block; }
-    input, select, textarea { width: 100%; padding: 15px; margin-bottom: 20px; border: 2px solid #cbd5e0; border-radius: 12px; font-size: 18px; font-family: 'Kanit'; -webkit-appearance: none; }
-    input:focus, select:focus { border-color: #004a99; outline: none; background: #f7fafc; }
+    input[type="text"], input[type="tel"], select, textarea { width: 100%; padding: 15px; margin-bottom: 15px; border: 2px solid #cbd5e0; border-radius: 12px; font-size: 16px; font-family: 'Kanit'; -webkit-appearance: none; }
+    input:focus, select:focus, textarea:focus { border-color: #004a99; outline: none; background: #f7fafc; }
     
-    button { background: #004a99; color: white; border: none; font-weight: 600; padding: 18px; border-radius: 15px; font-size: 22px; cursor: pointer; width: 100%; }
+    button { background: #004a99; color: white; border: none; font-weight: 600; padding: 18px; border-radius: 15px; font-size: 20px; cursor: pointer; width: 100%; margin-top: 10px; }
     button:disabled { background: #a0aec0; }
 
-    /* Profile Card */
     .profile-box { background: linear-gradient(135deg, #f0f7ff 0%, #ffffff 100%); border-radius: 20px; padding: 20px; border: 1px solid #bee3f8; margin-bottom: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
     .info-group { margin-bottom: 12px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 8px; }
     .info-label { font-size: 13px; color: #718096; text-transform: uppercase; }
     .info-value { font-size: 19px; color: #2c5282; font-weight: 600; }
 
-    /* News Items */
     .news-title { font-size: 20px; font-weight: 600; color: #004a99; margin-bottom: 15px; padding-left: 10px; border-left: 5px solid #004a99; }
-    .news-item { background: white; border: 1px solid #edf2f7; padding: 15px; border-radius: 15px; margin-bottom: 10px; display: flex; align-items: center; text-decoration: none; color: #2d3748; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+    .news-item { background: white; border: 1px solid #edf2f7; padding: 15px; border-radius: 15px; margin-bottom: 10px; display: flex; align-items: center; text-decoration: none; color: #2d3748; }
     .news-date { font-size: 11px; color: white; background: #004a99; padding: 3px 8px; border-radius: 6px; margin-right: 12px; }
   </style>
 </head>
 <body>
   <div class="card">
     <h2 id="mainTitle">Loading...</h2>
-    <div id="status" style="text-align:center; color:#666;">กำลังเชื่อมต่อฐานข้อมูล...</div>
+    <div id="status" style="text-align:center; color:#666;">กำลังโหลดข้อมูล...</div>
     <input type="hidden" id="lineId">
 
     <form id="regForm" style="display:none; flex-direction: column;">
-      <label>รหัสพนักงาน</label>
+      <label>รหัสสมาชิก / รหัสพนักงาน</label>
       <input type="text" id="employeeId" placeholder="กรอกรหัส 5 หลัก" required>
       <label>หน่วยงาน</label>
       <select id="dept" required>
@@ -67,28 +64,55 @@
         <div style="text-align:center; margin-bottom:12px;"><span style="background:#38a169; color:white; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:600;">ACTIVE MEMBER</span></div>
         <div class="info-group"><div class="info-label">ชื่อ-นามสกุล</div><div id="dispName" class="info-value">-</div></div>
         <div style="display:flex; justify-content:space-between;">
-          <div style="width:48%;" class="info-group"><div class="info-label">รหัสพนักงาน</div><div id="dispId" class="info-value">-</div></div>
+          <div style="width:48%;" class="info-group"><div class="info-label">รหัสสมาชิก</div><div id="dispId" class="info-value">-</div></div>
           <div style="width:48%;" class="info-group"><div class="info-label">หน่วยงาน</div><div id="dispDept" class="info-value">-</div></div>
         </div>
       </div>
 
-      <div class="news-title">ประกาศล่าสุด</div>
+      <div class="news-title">ประกาศสหกรณ์ล่าสุด</div>
       <div id="newsList" style="margin-bottom:30px;"></div>
 
       <div style="background:#f7fafc; padding:20px; border-radius:20px; border:1px solid #e2e8f0;">
-        <div class="news-title" style="font-size:18px;">ข้อเสนอแนะ / แจ้งปัญหา</div>
+        <div class="news-title" style="font-size:18px;">ยื่นข้อร้องเรียน / แจ้งปัญหา</div>
         <form id="feedbackForm">
-          <select id="fbTopic" required><option value="" disabled selected>เลือกหัวข้อ</option><option value="บริการ">บริการ</option><option value="สวัสดิการ">สวัสดิการ</option><option value="ระบบงาน">ระบบงาน/IT</option></select>
-          <textarea id="fbDetails" rows="3" placeholder="พิมพ์รายละเอียด..." required></textarea>
-          <button type="submit" id="btnFb" style="font-size:18px; padding:12px;">ส่งข้อมูล</button>
+          
+          <div style="background:#e2e8f0; padding:12px; border-radius:10px; margin-bottom:15px; font-size:13px; color:#2d3748; line-height: 1.5;">
+            📌 <b>ข้อมูลอัตโนมัติ:</b> ระบบจะทำการแนบ (1) ชื่อ-สกุล (2) รหัสสมาชิก และ (4) วันที่แจ้ง ลงในคำร้องนี้ให้โดยอัตโนมัติ
+          </div>
+
+          <label>3. ที่อยู่ปัจจุบันที่สามารถติดต่อได้</label>
+          <textarea id="fbAddress" rows="2" placeholder="ระบุที่อยู่ของสมาชิก..." required></textarea>
+
+          <label>5. เรื่องอันเป็นเหตุของปัญหาหรือข้อร้องเรียน</label>
+          <select id="fbTopic" required>
+            <option value="" disabled selected>-- เลือกหัวข้อเรื่อง --</option>
+            <option value="บริการ">ด้านการให้บริการของเจ้าหน้าที่</option>
+            <option value="สวัสดิการ">ด้านสวัสดิการ / เงินกู้</option>
+            <option value="ระบบงาน">ด้านระบบงาน / IT</option>
+            <option value="อื่นๆ">อื่นๆ</option>
+          </select>
+          
+          <label>ข้อเท็จจริง หรือพฤติการณ์ตามสมควร</label>
+          <textarea id="fbDetails" rows="4" placeholder="โปรดระบุรายละเอียดด้วยถ้อยคำสุภาพ..." required></textarea>
+
+          <div style="margin: 15px 0; display: flex; align-items: flex-start; gap: 10px; background: #fff; padding: 15px; border-radius: 10px; border: 1px solid #cbd5e0;">
+            <input type="checkbox" id="fbConsent" required style="width: 24px; height: 24px; margin: 0; cursor: pointer; flex-shrink: 0;">
+            <label for="fbConsent" style="font-size: 13px; font-weight: normal; color: #4a5568; margin-bottom: 0; line-height: 1.4; cursor: pointer;">
+              <b>6. การให้ความร่วมมือ:</b> ข้าพเจ้ายินยอมและพร้อมให้ความร่วมมือกับสหกรณ์ในการให้ข้อเท็จจริงหรือส่งมอบเอกสารที่เกี่ยวข้อง เมื่อได้รับการร้องขอ
+            </label>
+          </div>
+
+          <button type="submit" id="btnFb" style="font-size:18px; padding:15px; background-color: #e53e3e;">ยื่นข้อร้องเรียน</button>
         </form>
       </div>
-      <button onclick="liff.closeWindow()" style="background:#718096; margin-top:30px;">ปิดแอป</button>
+
+      <button onclick="liff.closeWindow()" style="background:#718096; margin-top:30px;">ปิดหน้าต่าง</button>
     </div>
   </div>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzlwjzOZhsVTSwBdt8e_K5pWw3eMHLMOElBnJT07911ajxu81w4WC1CTDr5wlljhhmV/exec"; 
+    // 🚨 ตั้งค่า URL ตรงนี้
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwTXbXZtfxWNOiA2KCdY-9zixMfDx-GIbofmsu9O6xztJV7gw1SPrbzR4Lw9yAx9bE/exec"; 
     const LIFF_ID = "2009900127-e74QaPVv";
 
     function hideAll() {
@@ -135,14 +159,29 @@
       e.preventDefault();
       document.getElementById('btnReg').disabled = true;
       const data = { action: "register", lineId: document.getElementById('lineId').value, employeeId: document.getElementById('employeeId').value, dept: document.getElementById('dept').value, phone: document.getElementById('phone').value };
-      fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(data) }).then(() => { alert("ลงทะเบียนสำเร็จ! กรุณารอ Admin อนุมัติ"); liff.closeWindow(); });
+      fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(data) }).then(() => { alert("ลงทะเบียนสำเร็จ! กรุณารอตรวจสอบ"); liff.closeWindow(); });
     };
 
     document.getElementById('feedbackForm').onsubmit = function(e) {
       e.preventDefault();
       document.getElementById('btnFb').disabled = true;
-      const data = { action: "feedback", lineId: document.getElementById('lineId').value, topic: document.getElementById('fbTopic').value, details: document.getElementById('fbDetails').value };
-      fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(data) }).then(() => { alert("ขอบคุณสำหรับข้อเสนอแนะ!"); document.getElementById('feedbackForm').reset(); document.getElementById('btnFb').disabled = false; });
+      document.getElementById('btnFb').innerText = "กำลังส่งข้อมูล...";
+      
+      const data = { 
+        action: "feedback", 
+        lineId: document.getElementById('lineId').value, 
+        address: document.getElementById('fbAddress').value,
+        topic: document.getElementById('fbTopic').value, 
+        details: document.getElementById('fbDetails').value 
+      };
+      
+      fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(data) })
+      .then(() => { 
+        alert("ส่งข้อร้องเรียนเรียบร้อย สหกรณ์จะดำเนินการตรวจสอบโดยเร็วที่สุด"); 
+        document.getElementById('feedbackForm').reset(); 
+        document.getElementById('btnFb').disabled = false; 
+        document.getElementById('btnFb').innerText = "ยื่นข้อร้องเรียน";
+      });
     };
 
     initLiff();
