@@ -8,16 +8,16 @@
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; }
-    body { font-family: 'Kanit', sans-serif; background-color: #ffffff; margin: 0; padding: 0; min-height: 100vh; }
-    .card { padding: 20px; width: 100%; border-top: 12px solid #004a99; display: flex; flex-direction: column; min-height: 100vh; }
-    h2 { color: #004a99; text-align: center; font-size: 26px; margin: 10px 0 20px 0; }
-    .status-line { text-align: center; font-size: 16px; font-weight: bold; padding: 12px; background: #eef6ff; border-radius: 10px; margin-bottom: 20px; }
+    body { font-family: 'Kanit', sans-serif; background-color: #fff; margin: 0; padding: 0; min-height: 100vh; }
+    .card { padding: 25px; width: 100%; border-top: 12px solid #004a99; display: flex; flex-direction: column; min-height: 100vh; }
+    h2 { color: #004a99; text-align: center; font-size: 28px; margin: 10px 0 20px 0; }
+    .status-line { text-align: center; font-size: 16px; padding: 12px; background: #eef6ff; border-radius: 10px; margin-bottom: 25px; color: #28a745; font-weight: bold; }
     
-    /* แก้ไขให้ Input เรียงตัวสวยงามไม่ซ้อนกัน */
-    form { display: flex; flex-direction: column; flex-grow: 1; }
-    label { display: block; margin-bottom: 8px; font-weight: 600; color: #333; font-size: 18px; }
-    input, select { 
-      width: 100%; padding: 15px; margin-bottom: 20px; 
+    /* แก้ไขการจัดวางให้เป็นแนวตั้งและเต็มความกว้าง */
+    .form-group { display: flex; flex-direction: column; width: 100%; margin-bottom: 20px; }
+    label { font-size: 18px; font-weight: 600; color: #333; margin-bottom: 8px; }
+    input { 
+      width: 100%; padding: 16px; 
       border: 2px solid #bbb; border-radius: 12px; font-size: 18px; 
       font-family: 'Kanit'; -webkit-appearance: none;
     }
@@ -25,8 +25,8 @@
     
     button { 
       background: #004a99; color: white; border: none; font-weight: 600; 
-      padding: 18px; border-radius: 15px; font-size: 22px; cursor: pointer;
-      margin-top: auto; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      padding: 20px; border-radius: 15px; font-size: 22px; cursor: pointer;
+      margin-top: auto; margin-bottom: 20px; box-shadow: 0 6px 15px rgba(0,74,153,0.3);
     }
     button:disabled { background: #ccc; }
   </style>
@@ -36,23 +36,27 @@
     <h2>สมัครสมาชิกพนักงาน</h2>
     <div id="status" class="status-line">กำลังเชื่อมต่อ LINE...</div>
     
-    <form id="regForm" style="display:none;">
+    <form id="regForm" style="display:none; flex-direction: column; flex-grow: 1;">
       <input type="hidden" id="lineId">
       
-      <label>รหัสพนักงาน</label>
-      <input type="text" id="employeeId" placeholder="กรอกรหัสพนักงาน 5 หลัก" required>
+      <div class="form-group">
+        <label>รหัสพนักงาน</label>
+        <input type="text" id="employeeId" placeholder="กรอกรหัสพนักงาน" required>
+      </div>
+
+      <div class="form-group">
+        <label>เบอร์โทรศัพท์</label>
+        <input type="tel" id="phone" placeholder="08x-xxxxxxx" required>
+      </div>
       
-      <p style="font-size: 14px; color: #666; margin-top: -15px; margin-bottom: 15px;">* ระบบจะดึงชื่อ-แผนกอัตโนมัติจากฐานข้อมูลบริษัท</p>
-      
-      <label>เบอร์โทรศัพท์</label>
-      <input type="tel" id="phone" placeholder="08x-xxxxxxx" required>
+      <p style="color: #666; font-size: 14px; margin-top: -10px;">* ระบบจะดึงชื่อและแผนกจาก Master Data โดยอัตโนมัติ</p>
       
       <button type="submit" id="btn">ยืนยันลงทะเบียน</button>
     </form>
   </div>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxOWXX5ObW8kjI-iM5mbyF3Aj2An_igJxLnWnxAR5gUVwGHi-BdUcW89EFHLv42ajaY/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyM0oA-bE8XCu6ywmSSxn_cQG9XI4LLuZ_PgByx_kXVKOi-A_ATN43_sB0YmleN0NlN/exec";
     const LIFF_ID = "2009900127-e74QaPVv";
 
     async function initLiff() {
@@ -62,7 +66,6 @@
           const profile = await liff.getProfile();
           document.getElementById('lineId').value = profile.userId;
           document.getElementById('status').innerText = "เชื่อมต่อ LINE สำเร็จ ✅";
-          document.getElementById('status').style.color = "#28a745";
           document.getElementById('regForm').style.display = "flex";
         } else {
           liff.login();
@@ -77,7 +80,7 @@
       e.preventDefault();
       const btn = document.getElementById('btn');
       btn.disabled = true;
-      btn.innerText = "กำลังตรวจสอบฐานข้อมูล...";
+      btn.innerText = "กำลังตรวจสอบข้อมูล...";
       
       const data = {
         action: "register",
@@ -88,15 +91,15 @@
 
       fetch(SCRIPT_URL, {
         method: "POST",
-        mode: "no-cors",
+        mode: "no-cors", // ใช้ no-cors เพื่อความเสถียรบน GitHub
         body: JSON.stringify(data)
       })
       .then(() => {
-        alert("ส่งข้อมูลลงทะเบียนแล้ว! \nระบบกำลังตรวจสอบรหัสพนักงานใน Master Data \nหากถูกต้องชื่อของคุณจะปรากฏในระบบทันที");
+        alert("ส่งข้อมูลลงทะเบียนแล้ว!\nกรุณารอระบบตรวจสอบ Master Data สักครู่\nหากถูกต้องระบบจะบันทึกชื่อให้ทันที");
         liff.closeWindow();
       })
       .catch(err => {
-        alert("Error: " + err);
+        alert("เกิดข้อผิดพลาด: " + err);
         btn.disabled = false;
       });
     };
