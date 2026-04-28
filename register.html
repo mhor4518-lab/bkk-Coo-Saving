@@ -44,10 +44,20 @@
 
     <form id="regForm" style="display:none; flex-direction: column;">
       <h3 style="text-align:center; color:#555; margin-top:0;">ลงทะเบียนเข้าใช้งาน</h3>
-      <label>รหัสพนักงาน</label>
-      <input type="text" id="employeeId" required>
-      <label>เบอร์โทรศัพท์</label>
-      <input type="tel" id="phone" required>
+<label>รหัสพนักงาน</label>
+<input type="text" id="employeeId" placeholder="กรอกรหัสพนักงาน" required>
+
+<label>หน่วยงาน</label>
+<select id="dept" required>
+  <option value="" disabled selected>-- เลือกหน่วยงาน --</option>
+  <option value="BKK">BKK</option>
+  <option value="AYU">AYU</option>
+  <option value="TPPT">TPPT</option>
+  <option value="HO">HO</option>
+</select>
+
+<label>เบอร์โทรศัพท์</label>
+<input type="tel" id="phone" placeholder="08x-xxxxxxx" required>
       <button type="submit" id="btnReg">ยืนยันลงทะเบียน</button>
     </form>
 
