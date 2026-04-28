@@ -1,33 +1,122 @@
-// วาง URL ที่ก๊อปมาลงในเครื่องหมายคำพูดด้านล่าง
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyyS3sUXig2pFCJdcEfMaB_M-7nUhR8WEHyxiYmTeFhn1cZZd0iHIDWKhxx7zmYsSqo/exec"; 
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ข้อเสนอแนะ / ร้องเรียน BKK Smart Factory</title>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    body { 
+      font-family: 'Kanit', sans-serif; 
+      background-color: #ffffff; 
+      margin: 0; padding: 0; 
+      display: flex; flex-direction: column; 
+      min-height: 100vh;
+    }
+    .card { 
+      background: white; 
+      padding: 25px; 
+      width: 100%; max-width: 100%; 
+      flex-grow: 1; 
+      display: flex; flex-direction: column;
+      border-top: 12px solid #004a99; 
+    }
+    h2 { 
+      color: #004a99; text-align: center; 
+      margin-top: 5px; margin-bottom: 30px; 
+      font-size: 28px; font-weight: 600;
+    }
+    label { 
+      display: block; margin-bottom: 10px; 
+      color: #333; font-size: 18px; font-weight: 600;
+    }
+    textarea, select, input, button { 
+      width: 100%; padding: 16px; 
+      margin-bottom: 25px; 
+      border-radius: 12px; border: 2px solid #bbb; 
+      font-family: 'Kanit', sans-serif;
+      font-size: 18px;
+      -webkit-appearance: none;
+    }
+    textarea:focus, select:focus, input:focus { 
+      outline: none; border-color: #004a99; background-color: #f0f7ff;
+    }
+    textarea { min-height: 150px; }
+    button { 
+      background: #004a99; color: white; 
+      border: none; font-weight: 600; 
+      cursor: pointer; padding: 20px; 
+      margin-top: auto; font-size: 22px; 
+      border-radius: 15px;
+      box-shadow: 0 6px 12px rgba(0,74,153,0.3);
+    }
+    button:active { background: #003366; transform: scale(0.97); }
+    button:disabled { background: #ccc; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>ข้อเสนอแนะ / ร้องเรียน</h2>
+    <form id="feedForm" style="display: flex; flex-direction: column; flex-grow: 1;">
+      
+      <label>หัวข้อที่ต้องการแจ้ง</label>
+      <select id="topic" required>
+        <option value="" disabled selected>-- แตะเพื่อเลือกหัวข้อ --</option>
+        <option value="บริการ">บริการของเจ้าหน้าที่</option>
+        <option value="สวัสดิการ">สวัสดิการและการกู้ยืม</option>
+        <option value="ระบบ">ระบบออนไลน์/แอปพลิเคชัน</option>
+        <option value="อื่นๆ">อื่นๆ</option>
+      </select>
+      
+      <label>รายละเอียด</label>
+      <textarea id="details" rows="5" placeholder="พิมพ์รายละเอียดที่นี่..." required></textarea>
+      
+      <label>ชื่อผู้แจ้ง (ถ้ามี)</label>
+      <input type="text" id="senderName" placeholder="ระบุชื่อ หรือเว้นว่างได้">
+      
+      <button type="submit" id="btn">ส่งข้อมูล</button>
+    </form>
+  </div>
 
-document.getElementById('feedForm').onsubmit = function(e) {
-  e.preventDefault();
-  const btn = document.getElementById('btn');
-  btn.disabled = true;
-  btn.innerText = "กำลังส่งข้อมูล...";
-  
-  const data = {
-    topic: document.getElementById('topic').value,
-    details: document.getElementById('details').value,
-    senderName: document.getElementById('senderName').value || "ไม่ประสงค์ออกนาม"
-  };
+  <script>
+    // 🚨 ใส่ WEB_APP_URL ที่ก๊อปมาจาก Google Apps Script ตรงนี้
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyyS3sUXig2pFCJdcEfMaB_M-7nUhR8WEHyxiYmTeFhn1cZZd0iHIDWKhxx7zmYsSqo/exec";
 
-  // ส่งข้อมูลไปยัง Google Sheets
-  fetch(SCRIPT_URL, {
-    method: "POST",
-    body: JSON.stringify(data)
-  })
-  .then(res => res.text())
-  .then(res => {
-    alert(res);
-    document.getElementById('feedForm').reset();
-    btn.disabled = false;
-    btn.innerText = "ส่งข้อมูล";
-  })
-  .catch(err => {
-    alert("เกิดข้อผิดพลาด: " + err);
-    btn.disabled = false;
-    btn.innerText = "ส่งข้อมูล";
-  });
-};
+    document.getElementById('feedForm').onsubmit = function(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btn');
+      btn.disabled = true;
+      btn.innerText = "กำลังส่งข้อมูล...";
+      
+      const data = {
+        topic: document.getElementById('topic').value,
+        details: document.getElementById('details').value,
+        senderName: document.getElementById('senderName').value || "ไม่ประสงค์ออกนาม"
+      };
+
+      // ใช้ fetch แบบ no-cors เพื่อส่งข้อมูลข้ามโดเมนจาก GitHub ไปยัง Google
+      fetch(SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors", 
+        cache: "no-cache",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      })
+      .then(res => {
+        // ในโหมด no-cors เราจะไม่เห็นข้อความตอบกลับจาก Google 
+        // แต่ถ้าไม่มี Error แสดงว่าข้อมูลถูกส่งไปถึงท่อน้ำเลี้ยงแล้ว
+        alert("ส่งข้อมูลเรียบร้อยแล้ว ขอบคุณสำหรับข้อเสนอแนะครับ");
+        document.getElementById('feedForm').reset();
+        btn.disabled = false;
+        btn.innerText = "ส่งข้อมูล";
+      })
+      .catch(err => {
+        alert("เกิดข้อผิดพลาดในการส่ง: " + err);
+        btn.disabled = false;
+        btn.innerText = "ส่งข้อมูล";
+      });
+    };
+  </script>
+</body>
+</html>
