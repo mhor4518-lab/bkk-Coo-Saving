@@ -140,14 +140,19 @@
       }
     }
 
-    function checkUserData(lineId) {
+   function checkUserData(lineId) {
       // เรียกใช้ GET Method ไปที่ Google Script
       const url = SCRIPT_URL + "?action=getProfile&lineId=" + lineId;
       
       fetch(url)
       .then(res => res.json())
       .then(res => {
-        document.getElementById('status').style.display = "none"; // ซ่อน Status Line
+        document.getElementById('status').style.display = "none"; // ซ่อนข้อความ Loading
+        
+        // 🚨 เพิ่ม 3 บรรทัดนี้: สั่งซ่อนทุกหน้าจอไว้ก่อน (เคลียร์หน้าจอ)
+        document.getElementById('regForm').style.display = "none";
+        document.getElementById('pendingView').style.display = "none";
+        document.getElementById('approvedView').style.display = "none";
         
         if (res.found) {
           if (res.status === "Pending") {
@@ -177,10 +182,11 @@
             }
             document.getElementById('newsList').innerHTML = newsHTML;
             
+            // โชว์เฉพาะหน้าข้อมูลพนักงาน
             document.getElementById('approvedView').style.display = "flex";
           }
         } else {
-          // สถานะ: ยังไม่เคยสมัคร
+          // สถานะ: ยังไม่เคยสมัคร (โชว์เฉพาะฟอร์มสมัคร)
           document.getElementById('mainTitle').innerText = "ลงทะเบียนเข้าใช้งาน";
           document.getElementById('regForm').style.display = "flex";
         }
