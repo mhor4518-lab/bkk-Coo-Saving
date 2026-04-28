@@ -25,9 +25,14 @@
     .info-label { font-size: 13px; color: #718096; text-transform: uppercase; }
     .info-value { font-size: 19px; color: #2c5282; font-weight: 600; }
 
+    /* สไตล์ส่วนประกาศข่าวสารที่อัปเดตใหม่ */
     .news-title { font-size: 20px; font-weight: 600; color: #004a99; margin-bottom: 15px; padding-left: 10px; border-left: 5px solid #004a99; }
-    .news-item { background: white; border: 1px solid #edf2f7; padding: 15px; border-radius: 15px; margin-bottom: 10px; display: flex; align-items: center; text-decoration: none; color: #2d3748; }
+    .news-item { background: white; border: 1px solid #edf2f7; padding: 15px; border-radius: 15px; margin-bottom: 10px; display: flex; align-items: center; color: #2d3748; }
     .news-date { font-size: 11px; color: white; background: #004a99; padding: 3px 8px; border-radius: 6px; margin-right: 12px; }
+    .news-text { font-size: 16px; font-weight: 500; }
+    /* สไตล์สำหรับปุ่ม ดูเอกสาร */
+    .doc-btn { background: #ebf8ff; color: #3182ce; padding: 6px 12px; border-radius: 8px; font-size: 13px; font-weight: 600; text-decoration: none; white-space: nowrap; margin-left: auto; border: 1px solid #bee3f8; }
+    .doc-btn:active { background: #bee3f8; }
   </style>
 </head>
 <body>
@@ -111,7 +116,7 @@
   </div>
 
   <script>
-    // 🚨 ตั้งค่า URL ตรงนี้
+    // 🚨 ตั้งค่า URL ของคุณให้เหมือนเดิม
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwTXbXZtfxWNOiA2KCdY-9zixMfDx-GIbofmsu9O6xztJV7gw1SPrbzR4Lw9yAx9bE/exec"; 
     const LIFF_ID = "2009900127-e74QaPVv";
 
@@ -142,8 +147,24 @@
               document.getElementById('dispName').innerText = res.name;
               document.getElementById('dispId').innerText = res.empId;
               document.getElementById('dispDept').innerText = res.dept;
+              
+              // 🆕 ส่วนที่อัปเดตการแสดงผลประกาศ (เช็คปุ่มเอกสาร)
               let nHTML = "";
-              res.news.forEach(n => { nHTML += `<a href="${n.link}" target="_blank" class="news-item"><span class="news-date">${n.date}</span><span class="news-text">${n.title}</span></a>`; });
+              res.news.forEach(n => { 
+                let btnHtml = "";
+                // เช็คว่ามีข้อมูลลิ้งก์ (link) ใน Google Sheet หรือไม่ ถ้ามีถึงจะแสดงปุ่ม
+                if (n.link && n.link.toString().trim() !== "") {
+                  btnHtml = `<a href="${n.link}" target="_blank" class="doc-btn">ดูเอกสาร</a>`;
+                }
+                
+                nHTML += `
+                  <div class="news-item">
+                    <span class="news-date">${n.date}</span>
+                    <span class="news-text">${n.title}</span>
+                    ${btnHtml}
+                  </div>`; 
+              });
+              
               document.getElementById('newsList').innerHTML = nHTML || "<p style='text-align:center; color:#a0aec0;'>ไม่มีประกาศ</p>";
               document.getElementById('approvedView').style.display = 'flex';
             }
