@@ -3,120 +3,253 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>ข้อเสนอแนะ / ร้องเรียน BKK Smart Factory</title>
-  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
+  <title>ระบบคำนวณสิทธิ์กู้สามัญ - TTSBKK COOP</title>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; }
-    body { 
-      font-family: 'Kanit', sans-serif; 
-      background-color: #ffffff; 
-      margin: 0; padding: 0; 
-      display: flex; flex-direction: column; 
-      min-height: 100vh;
+    :root {
+      --primary-color: #2c3e50;
+      --accent-color: #16a085; /* สีเขียวหยก ดูเป็นมิตรและมั่นคง */
+      --error-color: #e74c3c;
+      --bg-color: #f9f9f7;
+      --card-bg: #ffffff;
     }
-    .card { 
-      background: white; 
-      padding: 25px; 
-      width: 100%; max-width: 100%; 
-      flex-grow: 1; 
-      display: flex; flex-direction: column;
-      border-top: 12px solid #004a99; 
-    }
-    h2 { 
-      color: #004a99; text-align: center; 
-      margin-top: 5px; margin-bottom: 30px; 
-      font-size: 28px; font-weight: 600;
-    }
-    label { 
-      display: block; margin-bottom: 10px; 
-      color: #333; font-size: 18px; font-weight: 600;
-    }
-    textarea, select, input, button { 
-      width: 100%; padding: 16px; 
-      margin-bottom: 25px; 
-      border-radius: 12px; border: 2px solid #bbb; 
+    
+    body {
       font-family: 'Kanit', sans-serif;
-      font-size: 18px;
+      background-color: var(--bg-color);
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+      align-items: flex-start;
+    }
+
+    .calculator-card {
+      background: var(--card-bg);
+      width: 100%;
+      max-width: 480px;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+      margin-top: 20px;
+    }
+
+    .header { text-align: center; margin-bottom: 25px; }
+    .header h2 { margin: 0; color: var(--primary-color); font-weight: 600; font-size: 24px; }
+    .header p { margin: 5px 0; color: #7f8c8d; font-size: 14px; }
+
+    .input-group { margin-bottom: 18px; }
+    label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--primary-color); font-size: 15px; }
+    
+    input {
+      width: 100%;
+      padding: 14px;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 16px;
+      box-sizing: border-box;
+      background-color: #fff;
+      transition: 0.2s;
       -webkit-appearance: none;
     }
-    textarea:focus, select:focus, input:focus { 
-      outline: none; border-color: #004a99; background-color: #f0f7ff;
+    input:focus {
+        border-color: var(--accent-color);
+        outline: none;
+        background-color: #f0fcf9;
     }
-    textarea { min-height: 150px; }
-    button { 
-      background: #004a99; color: white; 
-      border: none; font-weight: 600; 
-      cursor: pointer; padding: 20px; 
-      margin-top: auto; font-size: 22px; 
-      border-radius: 15px;
-      box-shadow: 0 6px 12px rgba(0,74,153,0.3);
+
+    .info-box {
+      background-color: #f0f7f4;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      border-left: 5px solid var(--accent-color);
+      font-size: 14px;
+      line-height: 1.5;
+      color: #2c3e50;
     }
-    button:active { background: #003366; transform: scale(0.97); }
-    button:disabled { background: #ccc; }
+
+    button {
+      width: 100%;
+      padding: 16px;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 18px;
+      font-family: 'Kanit', sans-serif;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+      margin-top: 10px;
+      box-shadow: 0 4px 10px rgba(44, 62, 80, 0.2);
+    }
+
+    button:active { background-color: #1a252f; transform: scale(0.98); }
+
+    .result-box {
+      margin-top: 25px;
+      padding: 20px;
+      background-color: #fff;
+      border: 2px solid #eee;
+      border-radius: 12px;
+      display: none;
+    }
+
+    .result-item { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 15px; color: #555; }
+    .result-total { border-top: 2px dashed #ccc; padding-top: 15px; margin-top: 5px; font-weight: 600; color: var(--accent-color); font-size: 20px; display: flex; justify-content: space-between; align-items: center; }
+
+    .error-text { color: var(--error-color); font-size: 13px; margin-top: 8px; display: none; font-weight: 500; }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h2>ข้อเสนอแนะ / ร้องเรียน</h2>
-    <form id="feedForm" style="display: flex; flex-direction: column; flex-grow: 1;">
-      
-      <label>หัวข้อที่ต้องการแจ้ง</label>
-      <select id="topic" required>
-        <option value="" disabled selected>-- แตะเพื่อเลือกหัวข้อ --</option>
-        <option value="บริการ">บริการของเจ้าหน้าที่</option>
-        <option value="สวัสดิการ">สวัสดิการและการกู้ยืม</option>
-        <option value="ระบบ">ระบบออนไลน์/แอปพลิเคชัน</option>
-        <option value="อื่นๆ">อื่นๆ</option>
-      </select>
-      
-      <label>รายละเอียด</label>
-      <textarea id="details" rows="5" placeholder="พิมพ์รายละเอียดที่นี่..." required></textarea>
-      
-      <label>ชื่อผู้แจ้ง</label>
-      <input type="text" id="senderName" placeholder="ระบุชื่อ" required>
-      
-      <button type="submit" id="btn">ส่งข้อมูล</button>
-    </form>
+
+  <div class="calculator-card">
+    <div class="header">
+      <h2>คำนวณสิทธิ์กู้สามัญ</h2>
+      <p>สหกรณ์ออมทรัพย์ THAI TORAY SYNTHETICS</p>
+    </div>
+
+    <div class="input-group">
+      <label>เงินได้รายเดือน (บาท)</label>
+      <input type="number" id="salary" placeholder="ระบุเงินเดือนปัจจุบัน" oninput="updateLoanLimit()">
+    </div>
+
+    <div class="input-group">
+      <label>อายุการเป็นสมาชิก (เดือน)</label>
+      <input type="number" id="membershipMonths" placeholder="เช่น 36" oninput="updateLoanLimit()">
+    </div>
+
+    <div class="input-group">
+      <label>ทุนเรือนหุ้นปัจจุบัน (บาท)</label>
+      <input type="number" id="shares" placeholder="ระบุจำนวนหุ้นที่มี" oninput="updateLoanLimit()">
+    </div>
+
+    <div id="limitDisplay" class="info-box">
+      กรุณากรอกข้อมูลด้านบนเพื่อตรวจสอบวงเงินกู้สูงสุดของคุณ
+    </div>
+
+    <hr style="border: 0; border-top: 2px dashed #eee; margin: 30px 0;">
+
+    <div class="input-group">
+      <label>วงเงินที่ต้องการกู้จริง (บาท)</label>
+      <input type="number" id="requestAmount" placeholder="ระบุยอดเงินที่ต้องการกู้">
+      <div id="limitError" class="error-text">❌ ยอดกู้เกินสิทธิ์ที่ได้รับอนุมัติ</div>
+      <div id="collateralError" class="error-text">❌ ทุนเรือนหุ้นต้องไม่น้อยกว่า 10% ของวงเงินกู้</div>
+    </div>
+
+    <div class="input-group">
+      <label>ระยะเวลาผ่อนชำระ (งวด/เดือน)</label>
+      <input type="number" id="period" placeholder="เช่น 60 (สูงสุด 84 งวด)">
+    </div>
+
+    <button onclick="calculate()">คำนวณยอดผ่อนชำระ</button>
+
+    <div id="resultBox" class="result-box">
+      <div class="result-item"><span>วงเงินกู้ที่อนุมัติ:</span><span id="resAmount" style="font-weight: 600;">0 บาท</span></div>
+      <div class="result-item"><span>อายุสมาชิก:</span><span id="resTenure">0 เดือน</span></div>
+      <div class="result-item"><span>อัตราดอกเบี้ย:</span><span>6.0% ต่อปี</span></div>
+      <div class="result-item"><span>ระยะเวลาผ่อน:</span><span id="resPeriod">0 งวด</span></div>
+      <div class="result-total"><span>ผ่อนต่อเดือน<br><small style="font-size: 12px; font-weight: normal; color: #888;">(แบบลดต้นลดดอก)</small></span><span id="resMonth">0 บาท</span></div>
+    </div>
   </div>
 
   <script>
-    // 🚨 ใส่ WEB_APP_URL ที่ก๊อปมาจาก Google Apps Script ตรงนี้
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyyS3sUXig2pFCJdcEfMaB_M-7nUhR8WEHyxiYmTeFhn1cZZd0iHIDWKhxx7zmYsSqo/exec";
+    let currentMaxLoan = 0;
 
-    document.getElementById('feedForm').onsubmit = function(e) {
-      e.preventDefault();
-      const btn = document.getElementById('btn');
-      btn.disabled = true;
-      btn.innerText = "กำลังส่งข้อมูล...";
+    function updateLoanLimit() {
+      const salary = parseFloat(document.getElementById('salary').value) || 0;
+      const months = parseInt(document.getElementById('membershipMonths').value) || 0;
+      const display = document.getElementById('limitDisplay');
       
-      const data = {
-        topic: document.getElementById('topic').value,
-        details: document.getElementById('details').value,
-        senderName: document.getElementById('senderName').value || "ไม่ประสงค์ออกนาม"
-      };
+      // ซ่อน Error และ ผลลัพธ์เดิมเมื่อมีการพิมพ์แก้ไขข้อมูลใหม่
+      document.getElementById('limitError').style.display = 'none';
+      document.getElementById('collateralError').style.display = 'none';
+      document.getElementById('resultBox').style.display = 'none';
 
-      // ใช้ fetch แบบ no-cors เพื่อส่งข้อมูลข้ามโดเมนจาก GitHub ไปยัง Google
-      fetch(SCRIPT_URL, {
-        method: "POST",
-        mode: "no-cors", 
-        cache: "no-cache",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-      })
-      .then(res => {
-        // ในโหมด no-cors เราจะไม่เห็นข้อความตอบกลับจาก Google 
-        // แต่ถ้าไม่มี Error แสดงว่าข้อมูลถูกส่งไปถึงท่อน้ำเลี้ยงแล้ว
-        alert("ส่งข้อมูลเรียบร้อยแล้ว ขอบคุณสำหรับข้อเสนอแนะครับ");
-        document.getElementById('feedForm').reset();
-        btn.disabled = false;
-        btn.innerText = "ส่งข้อมูล";
-      })
-      .catch(err => {
-        alert("เกิดข้อผิดพลาดในการส่ง: " + err);
-        btn.disabled = false;
-        btn.innerText = "ส่งข้อมูล";
-      });
-    };
+      if (salary <= 0 || months === 0) {
+        display.innerHTML = "กรุณากรอกข้อมูลด้านบนเพื่อตรวจสอบวงเงินกู้สูงสุดของคุณ";
+        currentMaxLoan = 0;
+        return;
+      }
+
+      if (months < 12) {
+        display.innerHTML = "<span style='color: #e74c3c;'>⚠️ <b>ขออภัย</b> สมาชิกต้องมีอายุ 12 เดือนขึ้นไปจึงจะมีสิทธิ์กู้สามัญ</span>";
+        currentMaxLoan = 0;
+        return;
+      }
+
+      // 1. หาเพดานเงินกู้ตามอายุสมาชิก
+      let tenureCap = 0;
+      if (months >= 12 && months < 24) tenureCap = 100000;
+      else if (months >= 24 && months < 48) tenureCap = 300000;
+      else if (months >= 48 && months < 72) tenureCap = 500000;
+      else if (months >= 72 && months < 96) tenureCap = 700000;
+      else if (months >= 96) tenureCap = 900000;
+
+      // 2. กู้ได้ไม่เกิน 10 เท่าของเงินเดือน
+      const salaryCap = salary * 10;
+
+      // วงเงินกู้สูงสุดคือค่าที่น้อยกว่าระหว่าง Tenure vs Salary
+      currentMaxLoan = Math.min(tenureCap, salaryCap);
+
+      display.innerHTML = `✅ <b>สิทธิ์กู้สูงสุดของคุณคือ: <span style="font-size: 18px; color: #16a085;">${currentMaxLoan.toLocaleString()}</span> บาท</b><br>
+                           <small style="color: #666;">(ประเมินจากอายุสมาชิก ${months} เดือน และไม่เกิน 10 เท่าของเงินเดือน)</small>`;
+    }
+
+    function calculate() {
+      const requestAmount = parseFloat(document.getElementById('requestAmount').value) || 0;
+      const shares = parseFloat(document.getElementById('shares').value) || 0;
+      const period = parseInt(document.getElementById('period').value) || 0;
+      
+      const limitError = document.getElementById('limitError');
+      const collatError = document.getElementById('collateralError');
+      const resultBox = document.getElementById('resultBox');
+
+      // รีเซ็ตการแจ้งเตือน
+      limitError.style.display = 'none';
+      collatError.style.display = 'none';
+      resultBox.style.display = 'none';
+
+      if (requestAmount <= 0) { alert("กรุณาระบุวงเงินที่ต้องการกู้"); return; }
+      if (period <= 0) { alert("กรุณาระบุจำนวนงวดผ่อนชำระ"); return; }
+      if (period > 84) { alert("ระยะเวลาผ่อนชำระสูงสุดไม่เกิน 84 งวด"); return; }
+
+      let hasError = false;
+
+      // ตรวจสอบเงื่อนไข 1: วงเงินกู้สูงสุดต้องไม่เกินสิทธิ์
+      if (requestAmount > currentMaxLoan) {
+        limitError.style.display = 'block';
+        hasError = true;
+      }
+
+      // ตรวจสอบเงื่อนไข 2: หลักประกัน (ทุนเรือนหุ้น >= 10% ของยอดกู้)
+      const requiredCollateral = requestAmount * 0.10;
+      if (shares < requiredCollateral) {
+        collatError.style.display = 'block';
+        collatError.innerHTML = `❌ ทุนเรือนหุ้นต้องมีอย่างน้อย <b>${requiredCollateral.toLocaleString()}</b> บาท<br><small>(10% ของยอดกู้ที่คุณระบุ)</small>`;
+        hasError = true;
+      }
+
+      if (hasError) return; // ถ้าติดเงื่อนไขใดเงื่อนไขหนึ่ง ให้หยุดการทำงาน
+
+      // คำนวณยอดผ่อน (ลดต้นลดดอก)
+      const rate = 0.06 / 12; // ดอกเบี้ย 6.0% ต่อปี
+      const payment = requestAmount * (rate * Math.pow(1 + rate, period)) / (Math.pow(1 + rate, period) - 1);
+
+      // แสดงผลลัพธ์
+      document.getElementById('resAmount').innerText = requestAmount.toLocaleString() + " บาท";
+      document.getElementById('resTenure').innerText = document.getElementById('membershipMonths').value + " เดือน";
+      document.getElementById('resPeriod').innerText = period + " งวด";
+      document.getElementById('resMonth').innerText = Math.ceil(payment).toLocaleString() + " บาท";
+      
+      resultBox.style.display = 'block';
+      
+      // เลื่อนหน้าจอลงมาดูผลลัพธ์อัตโนมัติ
+      resultBox.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }
   </script>
 </body>
 </html>
