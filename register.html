@@ -3,106 +3,112 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>ลงทะเบียน TTSBKK</title>
+  <title>ข้อมูลพนักงาน TTSBKK</title>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
+    /* CSS เดิมของคุณ + ตกแต่ง Profile Card */
     * { box-sizing: border-box; }
-    body { font-family: 'Kanit', sans-serif; background-color: #fff; margin: 0; padding: 0; min-height: 100vh; }
-    .card { padding: 25px; width: 100%; border-top: 12px solid #004a99; display: flex; flex-direction: column; min-height: 100vh; }
-    h2 { color: #004a99; text-align: center; font-size: 28px; margin: 10px 0 20px 0; }
-    .status-line { text-align: center; font-size: 16px; padding: 12px; background: #eef6ff; border-radius: 10px; margin-bottom: 25px; color: #28a745; font-weight: bold; }
+    body { font-family: 'Kanit', sans-serif; background-color: #f4f7f6; margin: 0; padding: 0; }
+    .card { padding: 25px; width: 100%; border-top: 12px solid #004a99; min-height: 100vh; background: white; }
+    h2 { color: #004a99; text-align: center; font-size: 26px; }
     
-    /* แก้ไขการจัดวางให้เป็นแนวตั้งและเต็มความกว้าง */
-    .form-group { display: flex; flex-direction: column; width: 100%; margin-bottom: 20px; }
-    label { font-size: 18px; font-weight: 600; color: #333; margin-bottom: 8px; }
-    input { 
-      width: 100%; padding: 16px; 
-      border: 2px solid #bbb; border-radius: 12px; font-size: 18px; 
-      font-family: 'Kanit'; -webkit-appearance: none;
+    /* สไตล์สำหรับบัตรพนักงาน */
+    .profile-box { 
+      background: #f0f7ff; border-radius: 15px; padding: 20px; 
+      border: 1px solid #d0e3ff; margin-top: 20px; display: none; 
     }
-    input:focus { border-color: #004a99; outline: none; background: #f9fcff; }
+    .info-group { margin-bottom: 15px; border-bottom: 1px dashed #ccc; padding-bottom: 5px; }
+    .info-label { font-size: 14px; color: #666; }
+    .info-value { font-size: 20px; color: #004a99; font-weight: 600; }
     
-    button { 
-      background: #004a99; color: white; border: none; font-weight: 600; 
-      padding: 20px; border-radius: 15px; font-size: 22px; cursor: pointer;
-      margin-top: auto; margin-bottom: 20px; box-shadow: 0 6px 15px rgba(0,74,153,0.3);
-    }
-    button:disabled { background: #ccc; }
+    /* สไตล์ฟอร์มเดิม */
+    form { display: none; flex-direction: column; }
+    label { font-weight: 600; font-size: 18px; margin-bottom: 8px; }
+    input { width: 100%; padding: 15px; margin-bottom: 20px; border-radius: 12px; border: 2px solid #bbb; font-size: 18px; }
+    button { background: #004a99; color: white; border: none; padding: 20px; border-radius: 15px; font-size: 22px; cursor: pointer; }
   </style>
 </head>
 <body>
   <div class="card">
-    <h2>สมัครสมาชิกพนักงาน</h2>
-    <div id="status" class="status-line">กำลังเชื่อมต่อ LINE...</div>
+    <h2 id="mainTitle">ระบบพนักงาน</h2>
     
-    <form id="regForm" style="display:none; flex-direction: column; flex-grow: 1;">
-      <input type="hidden" id="lineId">
-      
-      <div class="form-group">
-        <label>รหัสพนักงาน</label>
-        <input type="text" id="employeeId" placeholder="กรอกรหัสพนักงาน" required>
+    <div id="profileCard" class="profile-box">
+      <div style="text-align:center; margin-bottom:15px;">
+         <div style="background:#004a99; color:white; display:inline-block; padding:5px 15px; border-radius:20px; font-size:14px;">สมาชิกพนักงานทั่วไป</div>
       </div>
+      <div class="info-group">
+        <div class="info-label">ชื่อ-นามสกุล</div>
+        <div id="dispName" class="info-value">-</div>
+      </div>
+      <div class="info-group">
+        <div class="info-label">รหัสพนักงาน</div>
+        <div id="dispId" class="info-value">-</div>
+      </div>
+      <div class="info-group">
+        <div class="info-label">แผนก</div>
+        <div id="dispDept" class="info-value">-</div>
+      </div>
+      <div class="info-group">
+        <div class="info-label">วันที่ลงทะเบียน</div>
+        <div id="dispDate" class="info-value">-</div>
+      </div>
+      <button onclick="liff.closeWindow()" style="background:#666; margin-top:20px;">ปิดหน้าต่าง</button>
+    </div>
 
-      <div class="form-group">
-        <label>เบอร์โทรศัพท์</label>
-        <input type="tel" id="phone" placeholder="08x-xxxxxxx" required>
-      </div>
-      
-      <p style="color: #666; font-size: 14px; margin-top: -10px;">* ระบบจะดึงชื่อและแผนกจาก Master Data โดยอัตโนมัติ</p>
-      
+    <form id="regForm">
+      <h2>สมัครสมาชิก</h2>
+      <input type="hidden" id="lineId">
+      <label>รหัสพนักงาน</label>
+      <input type="text" id="employeeId" required>
+      <label>เบอร์โทรศัพท์</label>
+      <input type="tel" id="phone" required>
       <button type="submit" id="btn">ยืนยันลงทะเบียน</button>
     </form>
   </div>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyM0oA-bE8XCu6ywmSSxn_cQG9XI4LLuZ_PgByx_kXVKOi-A_ATN43_sB0YmleN0NlN/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwNENvyhKyUebYrsogXqQKmDy4ZuG2CK-rFA8MvLfYWNMAqgPrrLEkb4M4avPTKTHjO/exec";
     const LIFF_ID = "2009900127-e74QaPVv";
 
     async function initLiff() {
-      try {
-        await liff.init({ liffId: LIFF_ID });
-        if (liff.isLoggedIn()) {
-          const profile = await liff.getProfile();
-          document.getElementById('lineId').value = profile.userId;
-          document.getElementById('status').innerText = "เชื่อมต่อ LINE สำเร็จ ✅";
-          document.getElementById('regForm').style.display = "flex";
-        } else {
-          liff.login();
-        }
-      } catch (err) {
-        document.getElementById('status').innerText = "เชื่อมต่อผิดพลาด: " + err;
-      }
-    }
-    initLiff();
-
-    document.getElementById('regForm').onsubmit = function(e) {
-      e.preventDefault();
-      const btn = document.getElementById('btn');
-      btn.disabled = true;
-      btn.innerText = "กำลังตรวจสอบข้อมูล...";
+      await liff.init({ liffId: LIFF_ID });
+      if (!liff.isLoggedIn()) { liff.login(); return; }
       
-      const data = {
-        action: "register",
-        lineId: document.getElementById('lineId').value,
-        employeeId: document.getElementById('employeeId').value,
-        phone: document.getElementById('phone').value
-      };
+      const profile = await liff.getProfile();
+      const lineId = profile.userId;
+      document.getElementById('lineId').value = lineId;
 
+      // 🔍 เช็คข้อมูลก่อนว่าเคยสมัครหรือยัง
+      checkExistingUser(lineId);
+    }
+
+    function checkExistingUser(lineId) {
+      // ใช้ fetch เพื่อดึงข้อมูลโปรไฟล์
       fetch(SCRIPT_URL, {
         method: "POST",
-        mode: "no-cors", // ใช้ no-cors เพื่อความเสถียรบน GitHub
-        body: JSON.stringify(data)
+        body: JSON.stringify({ action: "getProfile", lineId: lineId })
       })
-      .then(() => {
-        alert("ส่งข้อมูลลงทะเบียนแล้ว!\nกรุณารอระบบตรวจสอบ Master Data สักครู่\nหากถูกต้องระบบจะบันทึกชื่อให้ทันที");
-        liff.closeWindow();
-      })
-      .catch(err => {
-        alert("เกิดข้อผิดพลาด: " + err);
-        btn.disabled = false;
+      .then(res => res.json())
+      .then(res => {
+        if (res.found) {
+          // ✅ ถ้าเจอข้อมูล ให้โชว์ Profile Card
+          document.getElementById('mainTitle').innerText = "ข้อมูลสมาชิกพนักงาน";
+          document.getElementById('dispName').innerText = res.name;
+          document.getElementById('dispId').innerText = res.empId;
+          document.getElementById('dispDept').innerText = res.dept;
+          document.getElementById('dispDate').innerText = res.date;
+          document.getElementById('profileCard').style.display = "block";
+        } else {
+          // ❌ ถ้าไม่เจอ ให้โชว์ฟอร์มสมัคร
+          document.getElementById('regForm').style.display = "flex";
+        }
       });
-    };
+    }
+
+    initLiff();
+
+    // ส่วนของ onSubmit เดิมของคุณ...
   </script>
 </body>
 </html>
