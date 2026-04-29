@@ -13,8 +13,8 @@
     .card { padding: 25px; width: 100%; border-top: 10px solid #004a99; min-height: 100vh; background: white; display: flex; flex-direction: column; }
     h2 { color: #004a99; text-align: center; font-size: 28px; margin-bottom: 20px; }
     
-    label { font-size: 17px; font-weight: 600; color: #444; margin-bottom: 8px; display: block; }
-    input[type="text"], input[type="tel"], select, textarea { width: 100%; padding: 15px; margin-bottom: 15px; border: 2px solid #cbd5e0; border-radius: 12px; font-size: 16px; font-family: 'Kanit'; -webkit-appearance: none; }
+    label { font-size: 16px; font-weight: 600; color: #444; margin-bottom: 8px; display: block; }
+    input[type="text"], input[type="tel"], select, textarea { width: 100%; padding: 14px; margin-bottom: 15px; border: 2px solid #cbd5e0; border-radius: 12px; font-size: 16px; font-family: 'Kanit'; -webkit-appearance: none; }
     input:focus, select:focus, textarea:focus { border-color: #004a99; outline: none; background: #f7fafc; }
     
     button { background: #004a99; color: white; border: none; font-weight: 600; padding: 18px; border-radius: 15px; font-size: 20px; cursor: pointer; width: 100%; margin-top: 10px; transition: 0.2s; }
@@ -24,12 +24,12 @@
     .profile-box { background: linear-gradient(135deg, #f0f7ff 0%, #ffffff 100%); border-radius: 20px; padding: 20px; border: 1px solid #bee3f8; margin-bottom: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
     .info-group { margin-bottom: 12px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 8px; }
     .info-label { font-size: 13px; color: #718096; text-transform: uppercase; }
-    .info-value { font-size: 19px; color: #2c5282; font-weight: 600; }
+    .info-value { font-size: 18px; color: #2c5282; font-weight: 600; }
 
     .news-title { font-size: 20px; font-weight: 600; color: #004a99; margin-bottom: 15px; padding-left: 10px; border-left: 5px solid #004a99; }
     .news-item { background: white; border: 1px solid #edf2f7; padding: 15px; border-radius: 15px; margin-bottom: 10px; display: flex; align-items: center; color: #2d3748; }
     .news-date { font-size: 11px; color: white; background: #004a99; padding: 3px 8px; border-radius: 6px; margin-right: 12px; }
-    .news-text { font-size: 16px; font-weight: 500; }
+    .news-text { font-size: 15px; font-weight: 500; }
     .doc-btn { background: #ebf8ff; color: #3182ce; padding: 6px 12px; border-radius: 8px; font-size: 13px; font-weight: 600; text-decoration: none; white-space: nowrap; margin-left: auto; border: 1px solid #bee3f8; }
     .doc-btn:active { background: #bee3f8; }
   </style>
@@ -41,8 +41,8 @@
     <input type="hidden" id="lineId">
 
     <form id="regForm" style="display:none; flex-direction: column;">
-      <label>รหัสสมาชิก</label>
-      <input type="text" id="employeeId" placeholder="กรอกลำดับเลขสมาชิกเช่น 999 required>
+      <label>รหัสสมาชิก / รหัสพนักงาน</label>
+      <input type="text" id="employeeId" placeholder="กรอกรหัส 5 หลัก" required>
       
       <label>ชื่อ-นามสกุล (ภาษาไทย)</label>
       <input type="text" id="memberName" placeholder="ตัวอย่าง: นายสมชาย ใจดี" required>
@@ -69,49 +69,24 @@
       <button onclick="liff.closeWindow()" style="background:#a0aec0; margin-top:20px;">ปิดหน้าต่าง</button>
     </div>
 
-  <div id="approvedView" style="display:none; flex-direction: column;">
-  <div class="profile-box">
-    <div style="text-align:center; margin-bottom:12px;"><span style="background:#38a169; color:white; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:600;">ACTIVE MEMBER</span></div>
-    
-    <div class="info-group"><div class="info-label">ชื่อ-นามสกุล</div><div id="dispName" class="info-value">-</div></div>
-    
-    <div style="display:flex; justify-content:space-between; margin-bottom: 12px;">
-      <div style="width:48%;" class="info-group"><div class="info-label">รหัสสมาชิก</div><div id="dispId" class="info-value">-</div></div>
-      <div style="width:48%;" class="info-group"><div class="info-label">ทุนเรือนหุ้น (บาท)</div><div id="dispShares" class="info-value" style="color:#16a085;">-</div></div>
-    </div>
+    <div id="approvedView" style="display:none; flex-direction: column;">
+      <div class="profile-box">
+        <div style="text-align:center; margin-bottom:12px;"><span style="background:#38a169; color:white; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:600;">ACTIVE MEMBER</span></div>
+        
+        <div class="info-group"><div class="info-label">ชื่อ-นามสกุล</div><div id="dispName" class="info-value">-</div></div>
+        
+        <div style="display:flex; justify-content:space-between; margin-bottom: 12px;">
+          <div style="width:48%;" class="info-group"><div class="info-label">รหัสสมาชิก</div><div id="dispId" class="info-value">-</div></div>
+          <div style="width:48%;" class="info-group"><div class="info-label">ทุนเรือนหุ้น (บาท)</div><div id="dispShares" class="info-value" style="color:#16a085;">-</div></div>
+        </div>
 
-    <div style="background: #f8fafc; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0;">
-      <div class="info-label" style="margin-bottom: 8px;">📢 รายชื่อพนักงานที่ท่านค้ำประกันให้ (สูงสุด 3 ท่าน)</div>
-      <div id="dispG1" style="font-size: 15px; color: #4a5568; margin-bottom: 4px;">1. -</div>
-      <div id="dispG2" style="font-size: 15px; color: #4a5568; margin-bottom: 4px;">2. -</div>
-      <div id="dispG3" style="font-size: 15px; color: #4a5568;">3. -</div>
-    </div>
-  </div>
-  </div>
-
-<script>
-// แก้ไขฟังก์ชัน initLiff ในส่วนที่รับข้อมูล Profile
-// ค้นหา fetch(SCRIPT_URL + "?action=getProfile... แล้วอัปเดตบรรทัดการแสดงผล
-.then(res => {
-  hideAll();
-  if (res.found) {
-    if (res.status === "Pending") {
-      // ...
-    } else {
-      document.getElementById('dispName').innerText = res.name;
-      document.getElementById('dispId').innerText = res.empId;
-      document.getElementById('dispShares').innerText = Number(res.shares).toLocaleString(); // แสดงแบบมีคอมม่า
-      
-      // อัปเดตรายชื่อผู้ค้ำ
-      document.getElementById('dispG1').innerText = "1. " + (res.g1 || "-");
-      document.getElementById('dispG2').innerText = "2. " + (res.g2 || "-");
-      document.getElementById('dispG3').innerText = "3. " + (res.g3 || "-");
-      
-      // ... (ส่วน News เหมือนเดิม)
-      document.getElementById('approvedView').style.display = 'flex';
-    }
-  }
-});
+        <div style="background: #f8fafc; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0;">
+          <div class="info-label" style="margin-bottom: 8px;">📢 รายชื่อพนักงานที่ท่านค้ำประกันให้</div>
+          <div id="dispG1" style="font-size: 14px; color: #4a5568; margin-bottom: 4px;">1. -</div>
+          <div id="dispG2" style="font-size: 14px; color: #4a5568; margin-bottom: 4px;">2. -</div>
+          <div id="dispG3" style="font-size: 14px; color: #4a5568;">3. -</div>
+        </div>
+      </div>
 
       <div class="news-title">ประกาศสหกรณ์ล่าสุด</div>
       <div id="newsList" style="margin-bottom:30px;"></div>
@@ -119,14 +94,11 @@
       <div style="background:#f7fafc; padding:20px; border-radius:20px; border:1px solid #e2e8f0;">
         <div class="news-title" style="font-size:18px;">ยื่นข้อร้องเรียน / แจ้งปัญหา</div>
         <form id="feedbackForm">
-          
           <div style="background:#e2e8f0; padding:12px; border-radius:10px; margin-bottom:15px; font-size:13px; color:#2d3748; line-height: 1.5;">
             📌 <b>ข้อมูลอัตโนมัติ:</b> ระบบจะทำการแนบ (1) ชื่อ-สกุล (2) รหัสสมาชิก และ (4) วันที่แจ้ง ลงในคำร้องนี้ให้โดยอัตโนมัติ
           </div>
-
           <label>3. ที่อยู่ปัจจุบันที่สามารถติดต่อได้</label>
           <textarea id="fbAddress" rows="2" placeholder="ระบุที่อยู่ของสมาชิก..." required></textarea>
-
           <label>5. เรื่องอันเป็นเหตุของปัญหาหรือข้อร้องเรียน</label>
           <select id="fbTopic" required>
             <option value="" disabled selected>-- เลือกหัวข้อเรื่อง --</option>
@@ -135,7 +107,6 @@
             <option value="ระบบงาน">ด้านระบบงาน / IT</option>
             <option value="อื่นๆ">อื่นๆ</option>
           </select>
-          
           <label>ข้อเท็จจริง หรือพฤติการณ์ตามสมควร</label>
           <textarea id="fbDetails" rows="4" placeholder="โปรดระบุรายละเอียดด้วยถ้อยคำสุภาพ..." required></textarea>
 
@@ -155,8 +126,8 @@
   </div>
 
   <script>
-    // 🚨 ตั้งค่า URL ของคุณให้ตรงกับเวอร์ชันล่าสุด
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwnVr2o8G-P9ycqbBGXPhbrjI-j-KQezOxJHBBVxh1xP8NDdc4t476BE1B3hamZ-juM/exec"; 
+    // 🚨 ตั้งค่า URL 
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx1O5e8shqvnL7CQhlscyyc-VkUopqA2tXnaWPnQifOxlpNmWGuScwLkp9V2GLBND4h/exec"; 
     const LIFF_ID = "2009907545-4xtq7YiI";
 
     function hideAll() {
@@ -185,7 +156,15 @@
               document.getElementById('mainTitle').innerText = "My Profile";
               document.getElementById('dispName').innerText = res.name;
               document.getElementById('dispId').innerText = res.empId;
-              document.getElementById('dispDept').innerText = res.dept;
+              
+              // แสดงหุ้นแบบใส่คอมม่า
+              let sharesValue = Number(res.shares) || 0;
+              document.getElementById('dispShares').innerText = sharesValue.toLocaleString();
+              
+              // แสดงผู้ค้ำประกัน
+              document.getElementById('dispG1').innerText = "1. " + (res.g1 && res.g1 !== "-" ? res.g1 : "ว่าง");
+              document.getElementById('dispG2').innerText = "2. " + (res.g2 && res.g2 !== "-" ? res.g2 : "ว่าง");
+              document.getElementById('dispG3').innerText = "3. " + (res.g3 && res.g3 !== "-" ? res.g3 : "ว่าง");
               
               let nHTML = "";
               res.news.forEach(n => { 
@@ -207,7 +186,6 @@
       } catch (e) { alert("LIFF Error: กรุณาเปิดผ่านแอปพลิเคชัน LINE"); }
     }
 
-    // สมัครสมาชิก พร้อมส่งค่า "ชื่อ" ไปด้วย
     document.getElementById('regForm').onsubmit = function(e) {
       e.preventDefault();
       document.getElementById('btnReg').disabled = true;
@@ -217,7 +195,7 @@
         action: "register", 
         lineId: document.getElementById('lineId').value, 
         employeeId: document.getElementById('employeeId').value, 
-        name: document.getElementById('memberName').value, // ดึงค่าจากช่องพิมพ์ชื่อ
+        name: document.getElementById('memberName').value, 
         dept: document.getElementById('dept').value, 
         phone: document.getElementById('phone').value 
       };
@@ -236,7 +214,6 @@
       });
     };
 
-    // ส่งข้อร้องเรียน
     document.getElementById('feedbackForm').onsubmit = function(e) {
       e.preventDefault();
       document.getElementById('btnFb').disabled = true;
