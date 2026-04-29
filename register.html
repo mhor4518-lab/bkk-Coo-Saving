@@ -69,15 +69,49 @@
       <button onclick="liff.closeWindow()" style="background:#a0aec0; margin-top:20px;">ปิดหน้าต่าง</button>
     </div>
 
-    <div id="approvedView" style="display:none; flex-direction: column;">
-      <div class="profile-box">
-        <div style="text-align:center; margin-bottom:12px;"><span style="background:#38a169; color:white; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:600;">ACTIVE MEMBER</span></div>
-        <div class="info-group"><div class="info-label">ชื่อ-นามสกุล</div><div id="dispName" class="info-value">-</div></div>
-        <div style="display:flex; justify-content:space-between;">
-          <div style="width:48%;" class="info-group"><div class="info-label">รหัสสมาชิก</div><div id="dispId" class="info-value">-</div></div>
-          <div style="width:48%;" class="info-group"><div class="info-label">หน่วยงาน</div><div id="dispDept" class="info-value">-</div></div>
-        </div>
-      </div>
+  <div id="approvedView" style="display:none; flex-direction: column;">
+  <div class="profile-box">
+    <div style="text-align:center; margin-bottom:12px;"><span style="background:#38a169; color:white; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:600;">ACTIVE MEMBER</span></div>
+    
+    <div class="info-group"><div class="info-label">ชื่อ-นามสกุล</div><div id="dispName" class="info-value">-</div></div>
+    
+    <div style="display:flex; justify-content:space-between; margin-bottom: 12px;">
+      <div style="width:48%;" class="info-group"><div class="info-label">รหัสสมาชิก</div><div id="dispId" class="info-value">-</div></div>
+      <div style="width:48%;" class="info-group"><div class="info-label">ทุนเรือนหุ้น (บาท)</div><div id="dispShares" class="info-value" style="color:#16a085;">-</div></div>
+    </div>
+
+    <div style="background: #f8fafc; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0;">
+      <div class="info-label" style="margin-bottom: 8px;">📢 รายชื่อพนักงานที่ท่านค้ำประกันให้ (สูงสุด 3 ท่าน)</div>
+      <div id="dispG1" style="font-size: 15px; color: #4a5568; margin-bottom: 4px;">1. -</div>
+      <div id="dispG2" style="font-size: 15px; color: #4a5568; margin-bottom: 4px;">2. -</div>
+      <div id="dispG3" style="font-size: 15px; color: #4a5568;">3. -</div>
+    </div>
+  </div>
+  </div>
+
+<script>
+// แก้ไขฟังก์ชัน initLiff ในส่วนที่รับข้อมูล Profile
+// ค้นหา fetch(SCRIPT_URL + "?action=getProfile... แล้วอัปเดตบรรทัดการแสดงผล
+.then(res => {
+  hideAll();
+  if (res.found) {
+    if (res.status === "Pending") {
+      // ...
+    } else {
+      document.getElementById('dispName').innerText = res.name;
+      document.getElementById('dispId').innerText = res.empId;
+      document.getElementById('dispShares').innerText = Number(res.shares).toLocaleString(); // แสดงแบบมีคอมม่า
+      
+      // อัปเดตรายชื่อผู้ค้ำ
+      document.getElementById('dispG1').innerText = "1. " + (res.g1 || "-");
+      document.getElementById('dispG2').innerText = "2. " + (res.g2 || "-");
+      document.getElementById('dispG3').innerText = "3. " + (res.g3 || "-");
+      
+      // ... (ส่วน News เหมือนเดิม)
+      document.getElementById('approvedView').style.display = 'flex';
+    }
+  }
+});
 
       <div class="news-title">ประกาศสหกรณ์ล่าสุด</div>
       <div id="newsList" style="margin-bottom:30px;"></div>
@@ -122,7 +156,7 @@
 
   <script>
     // 🚨 ตั้งค่า URL ของคุณให้ตรงกับเวอร์ชันล่าสุด
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzyj4IhYXhn55pdSBzCw_xO1VYsUAFz4tnu1lptjcm1LKySeQLVpX2kWrGJzpvbq9db/exec"; 
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwnVr2o8G-P9ycqbBGXPhbrjI-j-KQezOxJHBBVxh1xP8NDdc4t476BE1B3hamZ-juM/exec"; 
     const LIFF_ID = "2009907545-4xtq7YiI";
 
     function hideAll() {
